@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * @author gtn
  */
 @Component
-public class ApplicationMapper {
+public class  ApplicationMapper {
     public ApplicationMapper() {
         // Mapper utility class
     }

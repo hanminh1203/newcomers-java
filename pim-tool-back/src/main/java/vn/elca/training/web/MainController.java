@@ -1,10 +1,13 @@
 package vn.elca.training.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 import vn.elca.training.service.ProjectService;
+import vn.elca.training.service.impl.dummy.FirstDummyProjectServiceImpl;
 
 /**
  * @author vlp
@@ -13,6 +16,7 @@ import vn.elca.training.service.ProjectService;
 @RestController
 public class MainController extends AbstractApplicationController {
 
+    @Autowired
     private ProjectService projectService;
 
     private String title;

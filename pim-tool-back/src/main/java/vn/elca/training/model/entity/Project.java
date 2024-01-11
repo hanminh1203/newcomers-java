@@ -1,5 +1,8 @@
 package vn.elca.training.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,6 +27,7 @@ public class Project {
     private String name;
 
     @Column
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate finishingDate;
 
     @Column
@@ -84,5 +88,15 @@ public class Project {
 
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", finishingDate=" + finishingDate +
+                ", customer='" + customer + '\'' +
+                '}';
     }
 }

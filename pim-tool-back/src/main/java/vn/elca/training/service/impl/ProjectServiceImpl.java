@@ -7,10 +7,8 @@ import org.springframework.stereotype.Service;
 import vn.elca.training.model.entity.Project;
 import vn.elca.training.repository.ProjectRepository;
 import vn.elca.training.service.ProjectService;
-import vn.elca.training.service.impl.dummy.FirstDummyProjectServiceImpl;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author vlp
@@ -25,8 +23,9 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectRepository projectRepository;
 
     @Override
-    public void updateProject(long id, Project updateProject) {
+    public Project updateProject(long id, Project updateProject) {
 
+        return updateProject;
     }
 
     @Override
@@ -40,8 +39,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Optional<Project> findById(long id) {
-        return projectRepository.findById(id);
+    public Project findById(long id) {
+        return null;
     }
 
 

@@ -9,7 +9,6 @@ import vn.elca.training.repository.ProjectRepository;
 import vn.elca.training.service.ProjectService;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author gtn
@@ -24,8 +23,9 @@ public class FirstDummyProjectServiceImpl extends AbstractDummyProjectService im
     ProjectRepository projectRepository;
 
     @Override
-    public void updateProject(long id, Project updateProject) {
+    public Project updateProject(long id, Project updateProject) {
 
+        return updateProject;
     }
 
     @Override
@@ -39,8 +39,8 @@ public class FirstDummyProjectServiceImpl extends AbstractDummyProjectService im
     }
 
     @Override
-    public Optional<Project> findById(long id) {
-        return projectRepository.findById(id);
+    public Project findById(long id) {
+        return null;
     }
     @Override
     public long count() {

@@ -1,16 +1,11 @@
 package vn.elca.training.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.time.LocalDate;
 
-/**
- * @author gtn
- *
- */
-public class ProjectDto {
+public class ProjectFindByIdDto {
     private Long id;
     private String name;
+    private String customer;
 
     private LocalDate finishingDate;
 
@@ -28,6 +23,14 @@ public class ProjectDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
     }
 
     public LocalDate getFinishingDate() {

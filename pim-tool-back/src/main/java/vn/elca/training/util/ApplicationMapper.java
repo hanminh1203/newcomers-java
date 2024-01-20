@@ -1,9 +1,7 @@
 package vn.elca.training.util;
 
 import org.springframework.stereotype.Component;
-import vn.elca.training.model.dto.ProjectDto;
-import vn.elca.training.model.dto.TaskDto;
-import vn.elca.training.model.dto.UserDto;
+import vn.elca.training.model.dto.*;
 import vn.elca.training.model.entity.Project;
 import vn.elca.training.model.entity.Task;
 import vn.elca.training.model.entity.User;
@@ -19,6 +17,20 @@ public class  ApplicationMapper {
         // Mapper utility class
     }
 
+    public ProjectFindByIdDto projectToProjectFindByIdDto(Project entity){
+        ProjectFindByIdDto projectFindByIdDto = new ProjectFindByIdDto();
+        projectFindByIdDto.setId(entity.getId());
+        projectFindByIdDto.setCustomer(entity.getCustomer());
+        projectFindByIdDto.setFinishingDate(entity.getFinishingDate());
+        projectFindByIdDto.setName(entity.getName());
+        return projectFindByIdDto;
+    }
+    public Project inputProjectToProject(Project projectToUpdate, InputProjectDto entity){
+        if (!entity.getName().isBlank()) projectToUpdate.setName(entity.getName());
+        if (!entity.getCustomer().isBlank()) projectToUpdate.setCustomer(entity.getCustomer());
+        projectToUpdate.setFinishingDate(entity.getFinishingDate());
+        return projectToUpdate;
+    }
     public ProjectDto projectToProjectDto(Project entity) {
         ProjectDto dto = new ProjectDto();
         dto.setId(entity.getId());

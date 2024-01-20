@@ -27,7 +27,6 @@ public class Project {
     private String name;
 
     @Column
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate finishingDate;
 
     @Column
@@ -90,13 +89,4 @@ public class Project {
         this.tasks = tasks;
     }
 
-    @Override
-    public String toString() {
-        return "Project{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", finishingDate=" + finishingDate +
-                ", customer='" + customer + '\'' +
-                '}';
-    }
 }

@@ -30,23 +30,18 @@ public class SecondDummyProjectServiceImpl extends AbstractDummyProjectService i
     }
 
     @Override
-    public Optional<Project> findById(long id) {
-        return projectRepository.findById(id);
+    public Project findById(long id) {
+        return projectRepository.findById(id).orElseThrow(()-> new RuntimeException("Not found"));
     }
 
     @Override
-    public void updateProject(long id,  Project updateProject){
-        Optional<Project> p = projectRepository.findById(id);
-        Project project;
-        if (p.isPresent()){
-            project = p.get();
+    public Project updateProject(long id, Project updateProject){
+        Project project = projectRepository.findById(id).orElseThrow( ()-> new RuntimeException("Not found"));
             project.setName(updateProject.getName());
             project.setCustomer(updateProject.getCustomer());
             project.setFinishingDate(updateProject.getFinishingDate());
-            projectRepository.save(project);
+            return projectRepository.save(project);
         }
-
-    }
 
     @Override
     public long count() {

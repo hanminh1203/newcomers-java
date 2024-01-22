@@ -2,7 +2,7 @@ package vn.elca.training.model.dto;
 
 import java.time.LocalDate;
 
-public class ProjectFindByIdDto {
+public class OutputProjectDto {
     private Long id;
     private String name;
     private String customer;

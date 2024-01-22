@@ -1,6 +1,7 @@
 package vn.elca.training.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import vn.elca.training.model.entity.Project;
 
@@ -15,7 +16,7 @@ public interface ProjectService {
 
     List<Project> findByProjectName(String keyWord);
 
-    Project findById(long id);
+    Optional<Project> findById(long id);
 
     long count();
 }

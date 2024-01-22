@@ -2,11 +2,15 @@ package vn.elca.training.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class InputProjectDto {
+    @NotNull
     private String name;
+    @NotNull
     private String customer;
+    @NotNull
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate finishingDate;
 

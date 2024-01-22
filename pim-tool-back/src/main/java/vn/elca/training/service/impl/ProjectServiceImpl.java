@@ -9,6 +9,7 @@ import vn.elca.training.repository.ProjectRepository;
 import vn.elca.training.service.ProjectService;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author vlp
@@ -39,7 +40,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project findById(long id) {
+    public Optional<Project> findById(long id) {
         return null;
     }
 

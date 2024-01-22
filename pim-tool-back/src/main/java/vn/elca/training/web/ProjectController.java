@@ -2,13 +2,19 @@ package vn.elca.training.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import vn.elca.training.model.dto.InputProjectDto;
+import vn.elca.training.model.dto.OutputProjectDto;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.entity.Project;
 import vn.elca.training.service.ProjectService;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -39,16 +45,28 @@ public class ProjectController extends AbstractApplicationController {
     }
 
     @GetMapping("/{id}")
-    public Object searchById(@PathVariable long id) {
-        return mapper.projectToProjectFindByIdDto(projectService.findById(id));
+    public ResponseEntity<?> searchById(@PathVariable long id) {
+        Optional<Project> project = projectService.findById(id);
+        if(project.isPresent()){
+            Project foundProject = project.get();
+            OutputProjectDto outputProjectDto = mapper.projectToOutputProjectDto(foundProject);
+            return new ResponseEntity<>(outputProjectDto, HttpStatus.OK);
+        }
+        else return new ResponseEntity<>("Not found Project "+ id, HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/{id}")
-    public ProjectDto InputProjectDto (@PathVariable long id, @RequestBody InputProjectDto inputProjectDto) {
-        Project project = mapper.inputProjectToProject( projectService.findById(id), inputProjectDto);
-        project = projectService.updateProject(project.getId(), project);
-        return mapper.projectToProjectDto(project);
-    }
+    public ResponseEntity<?> UpdateProject (@PathVariable long id, @RequestBody InputProjectDto inputProjectDto) {
 
-}
+        Optional<Project> project = projectService.findById(id);
+        if(project.isPresent()){
+            Project updatingProject = project.get();
+            updatingProject = mapper.inputProjectToProject(updatingProject, inputProjectDto);
+            projectService.updateProject(id, updatingProject);
+            OutputProjectDto outputProjectDto = mapper.projectToOutputProjectDto(updatingProject);
+            return new ResponseEntity<OutputProjectDto>(outputProjectDto, HttpStatus.OK);
+        }
+        else return new ResponseEntity<>("Not found Project "+ id,HttpStatus.NOT_FOUND);
+        }
+    }
 

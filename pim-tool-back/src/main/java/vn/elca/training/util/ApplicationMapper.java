@@ -17,13 +17,13 @@ public class  ApplicationMapper {
         // Mapper utility class
     }
 
-    public ProjectFindByIdDto projectToProjectFindByIdDto(Project entity){
-        ProjectFindByIdDto projectFindByIdDto = new ProjectFindByIdDto();
-        projectFindByIdDto.setId(entity.getId());
-        projectFindByIdDto.setCustomer(entity.getCustomer());
-        projectFindByIdDto.setFinishingDate(entity.getFinishingDate());
-        projectFindByIdDto.setName(entity.getName());
-        return projectFindByIdDto;
+    public OutputProjectDto projectToOutputProjectDto(Project entity){
+        OutputProjectDto outputProjectDto = new OutputProjectDto();
+        outputProjectDto.setId(entity.getId());
+        outputProjectDto.setCustomer(entity.getCustomer());
+        outputProjectDto.setFinishingDate(entity.getFinishingDate());
+        outputProjectDto.setName(entity.getName());
+        return outputProjectDto;
     }
     public Project inputProjectToProject(Project projectToUpdate, InputProjectDto entity){
         if (!entity.getName().isBlank()) projectToUpdate.setName(entity.getName());

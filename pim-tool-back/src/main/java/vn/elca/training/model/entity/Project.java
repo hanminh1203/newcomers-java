@@ -3,13 +3,7 @@ package vn.elca.training.model.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +23,16 @@ public class Project {
     @Column
     private boolean status;
 
+    @OneToOne( mappedBy = "project",cascade = CascadeType.PERSIST)
+    private User projectLeader;
+
+    @OneToMany(mappedBy = "projects", cascade = CascadeType.PERSIST)
+    private Set<User> member = new HashSet<>();
+
+    @JoinColumn
+    @ManyToOne
+    private CompanyGroup companyGroup;
+
     @Column
     private LocalDate finishingDate;
 
@@ -45,6 +49,12 @@ public class Project {
         this.name = name;
         this.finishingDate = finishingDate;
     }
+    public Project(String name, LocalDate finishingDate, boolean status) {
+        this.name = name;
+        this.finishingDate = finishingDate;
+        this.status = status;
+    }
+
 
     public Project(Long id, String name, LocalDate finishingDate) {
         this.id = id;
@@ -92,4 +102,35 @@ public class Project {
         this.tasks = tasks;
     }
 
+    public boolean isDone() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public User getProjectLeader() {
+        return projectLeader;
+    }
+
+    public void setProjectLeader(User projectLeader) {
+        this.projectLeader = projectLeader;
+    }
+
+    public Set<User> getMember() {
+        return member;
+    }
+
+    public void setMember(Set<User> member) {
+        this.member = member;
+    }
+
+    public CompanyGroup getCompanyGroup() {
+        return companyGroup;
+    }
+
+    public void setCompanyGroup(CompanyGroup companyGroup) {
+        this.companyGroup = companyGroup;
+    }
 }

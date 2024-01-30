@@ -2,15 +2,11 @@ package vn.elca.training.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author gtn
@@ -29,10 +25,28 @@ public class User implements Serializable {
     @Column
     private String fullName;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "company_group_fk",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "company_group_id"))
+    private Set<Project> projects = new HashSet<>();
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Task> tasks;
 
+    @OneToOne
+    @JoinColumn(name = "company_group")
+    private CompanyGroup companyGroup;
+
+    @OneToOne
+    @JoinColumn
+    private Project project;
+
     public User() {}
+
+    public User(String username){
+        this.username = username;
+    }
 
     public Long getId() {
         return id;

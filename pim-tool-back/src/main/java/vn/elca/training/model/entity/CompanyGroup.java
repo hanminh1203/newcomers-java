@@ -14,10 +14,10 @@ public class CompanyGroup {
     @Column(nullable = false)
     private String name;
 
-    @OneToOne
+    @OneToOne(mappedBy = "companyGroup", cascade = CascadeType.PERSIST)
     private User groupLeader;
 
-    @OneToMany
+    @OneToMany( mappedBy = "companyGroup", cascade = CascadeType.PERSIST)
     private Set<Project> projects = new HashSet<>();
 
     public CompanyGroup(String name) {

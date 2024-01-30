@@ -45,4 +45,13 @@ public class ProjectRepositoryTest {
                 .fetchFirst();
         Assert.assertEquals(PROJECT_NAME, project.getName());
     }
+
+    @Test
+    //Test save one project
+    public void testSaveOne(){
+        Project savedProject = projectRepository.save(new Project("Test saving Project", LocalDate.now()));
+        Project retriveSavedProject = projectRepository.findById(savedProject.getId()).orElse(null);
+        Assert.assertNotNull(retriveSavedProject);
+        Assert.assertEquals("Test saving Project", retriveSavedProject.getName());
+    }
 }

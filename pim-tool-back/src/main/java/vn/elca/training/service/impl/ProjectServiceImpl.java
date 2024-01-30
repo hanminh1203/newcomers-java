@@ -20,7 +20,6 @@ import java.util.Optional;
 public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
-    @Qualifier("FirstDummyProjectServiceImpl")
     private ProjectRepository projectRepository;
 
     @Override

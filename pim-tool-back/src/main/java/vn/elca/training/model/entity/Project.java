@@ -27,6 +27,9 @@ public class Project {
     private String name;
 
     @Column
+    private boolean status;
+
+    @Column
     private LocalDate finishingDate;
 
     @Column

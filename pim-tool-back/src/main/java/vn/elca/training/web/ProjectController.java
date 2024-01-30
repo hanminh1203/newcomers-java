@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 public class ProjectController extends AbstractApplicationController {
 
     @Autowired
-    @Qualifier("SecondOne")
     private ProjectService projectService;
 
     @GetMapping("/search")

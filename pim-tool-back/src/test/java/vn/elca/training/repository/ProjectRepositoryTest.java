@@ -1,10 +1,8 @@
 package vn.elca.training.repository;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 import static org.fest.assertions.api.Assertions.*;
 
 import javax.persistence.EntityManager;
@@ -73,17 +71,12 @@ public class ProjectRepositoryTest {
         User member2 = new User("NQN");
         User member3 = new User("PHL");
 
-        Project projectNumber1 = new Project("Test project number 1", LocalDate.now());
-        Project projectNumber2 = new Project("Test project number 2", LocalDate.now());
-        Project projectNumber3 = new Project("Test project number 3", LocalDate.now());
+        Project projectNumber1 = new Project("Test project number 1", LocalDate.now(), true, projectLeader1);
+        Project projectNumber2 = new Project("Test project number 2", LocalDate.now(), false, projectLeader2);
+        Project projectNumber3 = new Project("Test project number 3", LocalDate.now(), true, projectLeader3);
 
-        CompanyGroup companyGroup1 = new CompanyGroup("Test group number 1");
-        CompanyGroup companyGroup2 = new CompanyGroup("Test group number 2");
-
-        //set project leaders for projects
-        projectNumber1.setProjectLeader(projectLeader1);
-        projectNumber2.setProjectLeader(projectLeader2);
-        projectNumber3.setProjectLeader(projectLeader3);
+        CompanyGroup companyGroup1 = new CompanyGroup("Test group number 1", groupLeader1);
+        CompanyGroup companyGroup2 = new CompanyGroup("Test group number 2", groupLeader2);
 
         //set member for project
         Set<User> memberproject1 = new HashSet<>();
@@ -92,9 +85,10 @@ public class ProjectRepositoryTest {
         memberproject1.add(member3);
         projectNumber1.setMember(memberproject1);
 
-        // set group leader
-        companyGroup1.setGroupLeader(groupLeader1);
-        companyGroup2.setGroupLeader(groupLeader2);
+        //set projects' group
+        projectNumber1.setCompanyGroup(companyGroup1);
+        projectNumber2.setCompanyGroup(companyGroup1);
+        projectNumber3.setCompanyGroup(companyGroup1);
 
         // set projects to group
         companyGroup1.addProject(projectNumber1);
@@ -111,38 +105,65 @@ public class ProjectRepositoryTest {
     }
 
     @Test
-    public void simpleTestFindProject() {
-    Project simpleTestProject = new Project("simple test project", LocalDate.now());
-    simpleTestProject.setStatus(true);
-    projectRepository.save(simpleTestProject);
-    Project project = new JPAQuery<Project>(em)
-            .from(QProject.project)
-            .where(QProject.project.name.eq("simple test project")
-                    .and(QProject.project.status.eq(true)))
-            .fetchFirst();
-    Assert.assertEquals(simpleTestProject.getName(), project.getName());
+    public void testRemoveProject(){
+        Project savedProject = projectRepository.save(new Project("project to delete", LocalDate.now()));
+        Assert.assertNotNull(projectRepository.findById(savedProject.getId()));
+        projectRepository.delete(savedProject);
+        Assert.assertEquals(Optional.empty(), projectRepository.findById(savedProject.getId()));
+
     }
 
     @Test
+    public void simpleTestFindProject() {
+        User projectLeader = new User("HTV");
+        final String PROJECT_NAME = "simple test project";
+        Project simpleTestProject = new Project(PROJECT_NAME, LocalDate.now(), true, projectLeader);
+        projectRepository.save(simpleTestProject);
+        Project project = new JPAQuery<Project>(em)
+                .from(QProject.project)
+                .where(QProject.project.name.eq("simple test project")
+                        .and(QProject.project.status.eq(true)))
+                .fetchFirst();
+        Assert.assertNotNull(project);
+        Assert.assertEquals(PROJECT_NAME, project.getName());
+        }
+
+    @Test
     public void complextTestFindProject(){
+        //init pl and gl
         User groupLeader1 = new User("QMV");
         User projectLeader1 = new User("HTV");
-        Project projectNumber1 = new Project("Test project for complext query", LocalDate.now(), true);
-        CompanyGroup companyGroup1 = new CompanyGroup("Test group for complex query");
+        User projectLeader2 = new User("QKP");
 
-        projectNumber1.setProjectLeader(projectLeader1);
-        companyGroup1.setGroupLeader(groupLeader1);
+        CompanyGroup companyGroup1 = new CompanyGroup("Test group for complex query", groupLeader1);
+
+        // init projects
+        Project projectNumber1 = new Project("Test project for complex query", LocalDate.now(), true, projectLeader1);
+        Project projectNumber2 = new Project("Test project for complex query number 2", LocalDate.now(), false, projectLeader2);
+
+
+        projectNumber1.setCompanyGroup(companyGroup1);
+        projectNumber2.setCompanyGroup(companyGroup1);
+        projectNumber1.setCustomer("Customer 1");
+        projectNumber2.setCustomer("Customer 2");
+
         companyGroup1.addProject(projectNumber1);
+        companyGroup1.addProject(projectNumber2);
+
         companyGroupRepository.save(companyGroup1);
 
         Project project = new JPAQuery<Project>(em)
                 .from(QProject.project)
-                .join(QProject.project.projectLeader, QUser.user)
+                .join(QProject.project.companyGroup, QCompanyGroup.companyGroup)
                 .where(QProject.project.name.contains("complex")
-                        .and(QUser.user.username.eq("HTV")))
+                        .and(QProject.project.status.eq(true))
+                        .and(QCompanyGroup.companyGroup.name.contains("complex"))
+                        .and(QProject.project.customer.contains("Customer")))
                 .fetchFirst();
 
-        Assert.assertEquals(projectNumber1.getProjectLeader().getUsername(), project.getProjectLeader().getUsername());
+        Assert.assertNotNull(project);
+        Assert.assertEquals(companyGroup1.getName(), project.getCompanyGroup().getName());
+
     }
 
 }

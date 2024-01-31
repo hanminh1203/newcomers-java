@@ -23,14 +23,14 @@ public class Project {
     @Column
     private boolean status;
 
-    @OneToOne( mappedBy = "project",cascade = CascadeType.PERSIST)
+    @OneToOne( mappedBy = "project",cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private User projectLeader;
 
     @OneToMany(mappedBy = "projects", cascade = CascadeType.PERSIST)
     private Set<User> member = new HashSet<>();
 
     @JoinColumn
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private CompanyGroup companyGroup;
 
     @Column
@@ -53,6 +53,12 @@ public class Project {
         this.name = name;
         this.finishingDate = finishingDate;
         this.status = status;
+    }
+    public Project(String name, LocalDate finishingDate, boolean status, User projectLeader){
+        this.setProjectLeader(projectLeader);
+        this.name = name;
+        this.status = status;
+        this.finishingDate = finishingDate;
     }
 
 

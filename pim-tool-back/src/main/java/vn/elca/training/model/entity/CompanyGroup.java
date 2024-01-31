@@ -24,6 +24,10 @@ public class CompanyGroup {
         this.name = name;
     }
     public CompanyGroup(){};
+    public CompanyGroup(String name, User groupLeader){
+        this.name = name;
+        this.groupLeader = groupLeader;
+    }
 
 
     public Long getId() {

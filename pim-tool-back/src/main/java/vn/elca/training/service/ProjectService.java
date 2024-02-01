@@ -5,13 +5,18 @@ import java.util.Optional;
 
 import vn.elca.training.model.entity.Project;
 
+import javax.transaction.Transactional;
+
 /**
  * @author vlp
  *
  */
 public interface ProjectService {
 
-    public Project updateProject(long id, Project updateProject);
+
+    @Transactional
+    Project maintainProject(long id);
+    Project updateProject(long id, Project updateProject);
     List<Project> findAll();
 
     List<Project> findByProjectName(String keyWord);

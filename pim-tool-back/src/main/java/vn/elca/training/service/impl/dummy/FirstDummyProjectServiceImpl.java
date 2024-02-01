@@ -24,6 +24,11 @@ public class FirstDummyProjectServiceImpl extends AbstractDummyProjectService im
     ProjectRepository projectRepository;
 
     @Override
+    public Project maintainProject(long id) {
+        return null;
+    }
+
+    @Override
     public Project updateProject(long id, Project updateProject) {
 
         return updateProject;

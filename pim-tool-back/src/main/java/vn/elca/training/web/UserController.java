@@ -65,18 +65,4 @@ public class UserController extends AbstractApplicationController {
         }
         return userService.update(user);
     }
-
-    @GetMapping("/add_data")
-    public void addData(){
-        User groupLeader1 = new User("QMV");
-        User projectLeader1 = new User("HTV");
-        Project projectNumber1 = new Project("Test project for complex query", LocalDate.now(), true);
-        CompanyGroup companyGroup1 = new CompanyGroup("Test group for complex query");
-//        projectLeader1.setProject(projectNumber1);
-        projectNumber1.setProjectLeader(projectLeader1);
-        projectNumber1.setCompanyGroup(companyGroup1);
-        companyGroup1.addProject(projectNumber1);
-        companyGroup1.setGroupLeader(groupLeader1);
-        companyGroupRepository.save(companyGroup1);
-    }
 }

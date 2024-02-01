@@ -1,9 +1,11 @@
 package vn.elca.training.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +23,7 @@ public class Project {
     private String name;
 
     @Column
-    private boolean status;
+    private Boolean activated;
 
     @OneToOne( mappedBy = "project",cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private User projectLeader;
@@ -49,15 +51,15 @@ public class Project {
         this.name = name;
         this.finishingDate = finishingDate;
     }
-    public Project(String name, LocalDate finishingDate, boolean status) {
+    public Project(String name, LocalDate finishingDate, Boolean activated) {
         this.name = name;
         this.finishingDate = finishingDate;
-        this.status = status;
+        this.activated = activated;
     }
-    public Project(String name, LocalDate finishingDate, boolean status, User projectLeader){
+    public Project(String name, LocalDate finishingDate, Boolean activated, User projectLeader){
         this.setProjectLeader(projectLeader);
         this.name = name;
-        this.status = status;
+        this.activated = activated;
         this.finishingDate = finishingDate;
     }
 
@@ -68,6 +70,18 @@ public class Project {
         this.finishingDate = finishingDate;
     }
 
+    public static Project copy(Project project) {
+        Project newProject = new Project();
+        newProject.setName(project.getName());
+        newProject.setCustomer(project.getCustomer());
+        newProject.setActivated(project.getActivated());
+        newProject.setTasks(project.getTasks());
+        newProject.setProjectLeader(project.getProjectLeader());
+        newProject.setMember(project.getMember());
+        newProject.setCompanyGroup(project.getCompanyGroup());
+        newProject.setFinishingDate(project.getFinishingDate());
+        return newProject;
+    }
     public Long getId() {
         return id;
     }
@@ -108,12 +122,12 @@ public class Project {
         this.tasks = tasks;
     }
 
-    public boolean isDone() {
-        return status;
+    public Boolean getActivated() {
+        return activated;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
     }
 
     public User getProjectLeader() {

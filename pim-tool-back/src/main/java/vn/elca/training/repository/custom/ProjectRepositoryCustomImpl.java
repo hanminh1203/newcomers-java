@@ -19,4 +19,11 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
                 .where(QProject.project.name.contains(keyWord))
                 .fetch();
     }
+    @Override
+    public Project findOneProjectByName(String keyWord) {
+        return new JPAQuery<Project>(em)
+                .from(QProject.project)
+                .where(QProject.project.name.contains(keyWord))
+                .fetchFirst();
+    }
 }

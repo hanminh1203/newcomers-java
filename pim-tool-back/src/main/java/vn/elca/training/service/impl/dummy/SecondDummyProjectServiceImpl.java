@@ -35,6 +35,11 @@ public class SecondDummyProjectServiceImpl extends AbstractDummyProjectService i
     }
 
     @Override
+    public Project maintainProject(long id) {
+        return null;
+    }
+
+    @Override
     public Project updateProject(long id, Project updateProject){
         Project project = projectRepository.findById(id).orElseThrow( ()-> new RuntimeException("Not found"));
             project.setName(updateProject.getName());

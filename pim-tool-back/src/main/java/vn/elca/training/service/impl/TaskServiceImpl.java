@@ -16,10 +16,12 @@
 
 package vn.elca.training.service.impl;
 
+import javassist.NotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import vn.elca.training.model.entity.Project;
 import vn.elca.training.model.entity.Task;
@@ -32,6 +34,7 @@ import vn.elca.training.repository.TaskRepository;
 import vn.elca.training.service.AuditService;
 import vn.elca.training.service.TaskService;
 
+import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +46,7 @@ import java.util.UUID;
  *
  */
 @Service
-@Transactional
+@Transactional(rollbackFor = DeadlineAfterFinishingDateException.class )
 public class TaskServiceImpl implements TaskService {
 	private Log logger = LogFactory.getLog(getClass());
 	private static final int FETCH_LIMIT = 10;
@@ -57,7 +60,11 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public List<Project> findProjectsByTaskName(String taskName) {
-		return taskRepository.findProjectsByTaskName(taskName);
+		 List<Project> projects = taskRepository.findProjectsByTaskName(taskName);
+		 for (Project project : projects){
+			 System.out.println(project.getTasks());
+		 }
+		return projects;
 	}
 
 	@Override
@@ -81,27 +88,34 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public List<Task> listTasksById(List<Long> ids) {
-		List<Task> tasks = new ArrayList<>(ids.size());
-		for (Long id : ids) {
-			tasks.add(getTaskById(id));
-		}
-		return tasks;
+		return taskRepository.findProjectByIds(ids);
+		//				new ArrayList<>(ids.size());
+//		for (Long id : ids) {
+//			tasks.add(getTaskById(id));
+//		}
 	}
-
 	@Override
-	public Task getTaskById(Long id) {
-		return taskRepository.findById(id).orElse(null);
+	public Task getTaskById(Long id) throws NotFoundException {
+		 Optional optional = taskRepository.findById(id);
+		 if (optional.isPresent()){
+			 return (Task) optional.get();
+		 }
+		 else throw new NotFoundException("Task not found");
+
+
 		// Should throw exception if not found
 	}
 
 	@Override
-	public void updateDeadline(Long taskId, LocalDate deadline) throws DeadlineAfterFinishingDateException {
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void updateDeadline(Long taskId, LocalDate deadline) throws DeadlineAfterFinishingDateException, NotFoundException {
 		Optional<Task> optional = taskRepository.findById(taskId);
 		if (optional.isPresent()) {
 			Task task = optional.get();
 			task.setDeadline(deadline);
 			save(task);
 		}
+		else throw new NotFoundException("Task not found");
 		// Should throw exception if not found
 	}
 
@@ -126,7 +140,6 @@ public class TaskServiceImpl implements TaskService {
 	private Task save(Task task) throws DeadlineAfterFinishingDateException {
 		Task result = taskRepository.save(task);
 		taskValidator.validate(task);
-
 		return result;
 	}
 }

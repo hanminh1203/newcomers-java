@@ -1,6 +1,7 @@
 package vn.elca.training.repository.custom;
 
 import com.querydsl.jpa.impl.JPAQuery;
+import org.springframework.data.jpa.repository.EntityGraph;
 import vn.elca.training.model.entity.Project;
 import vn.elca.training.model.entity.QProject;
 import vn.elca.training.model.entity.QTask;
@@ -32,8 +33,17 @@ public class TaskRepositoryCustomImpl implements TaskRepositoryCustom {
     public List<Task> listRecentTasks(int limit) {
         return new JPAQuery<Task>(em)
                 .from(QTask.task)
+                .join(QTask.task.user).fetchJoin()
+                .join(QTask.task.project).fetchJoin()
                 .orderBy(QTask.task.id.desc())
                 .limit(limit)
+                .fetch();
+    }
+    @Override
+    public List<Task> findProjectByIds(List<Long> ids){
+        return new JPAQuery<Task>(em)
+                .from(QTask.task)
+                .where(QTask.task.id.in(ids))
                 .fetch();
     }
 }

@@ -13,12 +13,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * @author vlp
  *
  */
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Task implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +39,7 @@ public class Task implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
+    @JsonIgnore
     private User user;
 
     public Task(Project project, String name) {
@@ -48,7 +51,7 @@ public class Task implements Serializable {
     public Task() {}
 
     public Project getProject() {
-        return project;
+        return this.project;
     }
 
     public void setProject(Project project) {

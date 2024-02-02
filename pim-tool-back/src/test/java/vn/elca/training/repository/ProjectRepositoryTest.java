@@ -122,7 +122,7 @@ public class ProjectRepositoryTest {
         Project project = new JPAQuery<Project>(em)
                 .from(QProject.project)
                 .where(QProject.project.name.eq("simple test project")
-                        .and(QProject.project.status.eq(true)))
+                        .and(QProject.project.activated.eq(true)))
                 .fetchFirst();
         Assert.assertNotNull(project);
         Assert.assertEquals(PROJECT_NAME, project.getName());
@@ -156,7 +156,7 @@ public class ProjectRepositoryTest {
                 .from(QProject.project)
                 .join(QProject.project.companyGroup, QCompanyGroup.companyGroup)
                 .where(QProject.project.name.contains("complex")
-                        .and(QProject.project.status.eq(true))
+                        .and(QProject.project.activated.eq(true))
                         .and(QCompanyGroup.companyGroup.name.contains("complex"))
                         .and(QProject.project.customer.contains("Customer")))
                 .fetchFirst();

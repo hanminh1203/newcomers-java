@@ -46,6 +46,9 @@ public class UserServiceImpl implements UserService {
         List<Task> tasks = taskRepository.findAllById(taskIds);
         User user = findOne(username);
         user.setTasks(tasks);
+        for (Task task : tasks){ // them viec set user cho task
+            task.setUser(user);
+        }
 
         return user;
     }

@@ -67,12 +67,11 @@ public class TaskAudit {
     public TaskAudit() {}
 
     public TaskAudit(Task task, AuditType auditType, Status status, String message) {
-        setProjectId(task.getProject().getId());
-        setTaskName(task.getName());
-        setTaskDeadline(task.getDeadline());
-        setAuditType(auditType);
-        setStatus(status);
-        setMessage(message);
+        this.auditType = auditType;
+        this.message = message;
+        this.status = status;
+        this.taskDeadline = task.getDeadline();
+        this.taskName = task.getName();
     }
 
     public AuditType getAuditType() {

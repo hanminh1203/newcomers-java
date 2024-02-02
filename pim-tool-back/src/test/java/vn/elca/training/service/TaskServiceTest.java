@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import com.querydsl.jpa.impl.JPAQuery;
+import javassist.NotFoundException;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -32,8 +33,7 @@ import vn.elca.training.repository.TaskRepository;
  */
 @ContextConfiguration(classes = {ApplicationWebConfig.class})
 @RunWith(value=SpringRunner.class)
-// please remove this annotation to do the Hibernate exercise
-@Ignore
+
 public class TaskServiceTest {
 	@PersistenceContext
 	private EntityManager em;
@@ -85,7 +85,7 @@ public class TaskServiceTest {
 	}
 
 	@Test
-	public void testUpdateDeadline() {
+	public void testUpdateDeadline() throws NotFoundException {
 		createProjectAndTaskData(1, 5);
 		final Long taskId = 5L;
 		final Task task = taskRepository.findById(taskId).orElse(null);

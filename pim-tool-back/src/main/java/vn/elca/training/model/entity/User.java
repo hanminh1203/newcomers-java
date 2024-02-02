@@ -13,7 +13,6 @@ import java.util.Set;
  *
  */
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

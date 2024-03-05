@@ -5,49 +5,26 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class CompanyGroup {
+@Table(name = "company_group")
+public class CompanyGroup extends PimBase{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private String name;
-
-    @OneToOne(mappedBy = "companyGroup", cascade = CascadeType.PERSIST)
-    private User groupLeader;
+    @OneToOne
+    @JoinColumn(name = "group_leader_id", nullable = false)
+    private Employee groupLeader;
 
     @OneToMany( mappedBy = "companyGroup", cascade = CascadeType.PERSIST)
     private Set<Project> projects = new HashSet<>();
 
-    public CompanyGroup(String name) {
-        this.name = name;
-    }
+
     public CompanyGroup(){};
-    public CompanyGroup(String name, User groupLeader){
-        this.name = name;
-        this.groupLeader = groupLeader;
-    }
 
 
-    public Long getId() {
-        return id;
-    }
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public User getGroupLeader() {
+    public Employee getGroupLeader() {
         return groupLeader;
     }
 
-    public void setGroupLeader(User groupLeader) {
+    public void setGroupLeader(Employee groupLeader) {
         this.groupLeader = groupLeader;
     }
 
@@ -64,4 +41,5 @@ public class CompanyGroup {
     public void removeProject(Project project){
         this.projects.remove(project);
     }
+
 }

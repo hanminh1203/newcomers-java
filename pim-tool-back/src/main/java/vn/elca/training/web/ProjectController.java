@@ -1,18 +1,18 @@
 package vn.elca.training.web;
 
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.elca.training.model.dto.InputProjectDto;
-import vn.elca.training.model.dto.OutputProjectDto;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.entity.Project;
+import vn.elca.training.model.exception.ProjectNotFoundException;
 import vn.elca.training.repository.ProjectRepository;
-import vn.elca.training.service.AuditService;
 import vn.elca.training.service.ProjectService;
 
 import java.util.List;
@@ -23,10 +23,11 @@ import java.util.stream.Collectors;
  * @author gtn
  *
  */
+
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/projects")
 public class ProjectController extends AbstractApplicationController {
-
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
     @Autowired
@@ -53,30 +54,22 @@ public class ProjectController extends AbstractApplicationController {
                 .collect(Collectors.toList());
     }
 
+    @CrossOrigin("http://localhost:4200/")
     @GetMapping("/{id}")
-    public ResponseEntity<?> searchById(@PathVariable long id) {
-        Optional<Project> project = projectService.findById(id);
-        if(project.isPresent()){
-            Project foundProject = project.get();
-            OutputProjectDto outputProjectDto = mapper.projectToOutputProjectDto(foundProject);
-            return new ResponseEntity<>(outputProjectDto, HttpStatus.OK);
-        }
-        else return new ResponseEntity<>("Not found Project "+ id, HttpStatus.NOT_FOUND);
+    public ProjectDto searchById(@PathVariable long id) throws ProjectNotFoundException {
+        Project project = projectService.findById(id);
+        return mapper.projectToProjectDto(project);
     }
 
 
     @PostMapping("/{id}")
-        public ResponseEntity<?> UpdateProject (@PathVariable long id, @RequestBody InputProjectDto inputProjectDto) {
+        public ResponseEntity<?> UpdateProject (@PathVariable long id, @RequestBody ProjectDto inputProjectDto) throws ProjectNotFoundException {
 
-            Optional<Project> project = projectService.findById(id);
-            if(project.isPresent()){
-                Project updatingProject = project.get();
-                updatingProject = mapper.inputProjectToProject(updatingProject, inputProjectDto);
+            Project updatingProject = projectService.findById(id);
+                updatingProject = mapper.projectDtoToProject(updatingProject, inputProjectDto);
                 projectService.updateProject(id, updatingProject);
-                OutputProjectDto outputProjectDto = mapper.projectToOutputProjectDto(updatingProject);
-                return new ResponseEntity<OutputProjectDto>(outputProjectDto, HttpStatus.OK);
-            }
-            else return new ResponseEntity<>("Not found Project "+ id,HttpStatus.NOT_FOUND);
+                ProjectDto outputProjectDto = mapper.projectToProjectDto(updatingProject);
+                return new ResponseEntity<ProjectDto>(outputProjectDto, HttpStatus.OK);
             }
     }
 

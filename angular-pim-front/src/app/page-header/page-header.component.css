@@ -1,0 +1,10 @@
+.page_header {
+    display: flex;
+    align-items: flex-end;
+    border-bottom: 0.1px solid black;
+    padding-bottom: 2em;
+}
+h2 {
+    font-weight: bolder;
+    font-size:large;
+}

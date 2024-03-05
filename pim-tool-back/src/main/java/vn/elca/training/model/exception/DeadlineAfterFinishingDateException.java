@@ -22,7 +22,7 @@ import java.time.LocalDate;
  * @author vlp
  *
  */
-public class DeadlineAfterFinishingDateException extends RuntimeException {
+public class DeadlineAfterFinishingDateException extends Exception {
     private final LocalDate projectFinishingDate;
     private final LocalDate taskDeadline;
 

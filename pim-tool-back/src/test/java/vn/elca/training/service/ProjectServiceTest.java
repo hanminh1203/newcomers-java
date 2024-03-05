@@ -31,30 +31,4 @@ public class ProjectServiceTest {
     @Autowired
     private ProjectRepository projectRepository;
 
-
-    @Test
-    public void testMaintainProject(){
-        Project savedProject = projectRepository.save(new Project("Project_Test_Maintain", LocalDate.now(), true));
-        Assert.assertEquals(6,projectRepository.count());
-        Project updatedProject = projectService.maintainProject(savedProject.getId());
-
-        Project project = projectRepository.findById(savedProject.getId()).get();
-
-        Assert.assertEquals(false, project.getActivated());
-        Assert.assertEquals(7, projectRepository.count());
-        Assert.assertTrue(updatedProject.getName().contains("Maint.2024"));
-    }
-
-    @Test
-    public void testIsTrulyTransaction(){
-        ProjectService projectService = applicationContext.getBean(ProjectService.class);
-        String projectServiceClassName = projectService.getClass().getName();
-        Assert.assertTrue(projectServiceClassName.contains("EnhancerBySpringCGLIB"));
-    }
-    @Test
-    public void testIsNotTransaction(){
-        TestService testService = applicationContext.getBean(TestService.class);
-        String name = testService.getClass().getName();
-        Assert.assertTrue(name.contains("EnhancerBySpringCGLIB"));
-    }
 }

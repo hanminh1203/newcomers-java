@@ -1,93 +1,51 @@
 package vn.elca.training.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.apache.commons.lang3.SerializationUtils;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import vn.elca.training.model.ProjectStatus;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * @author vlp
  */
 @Entity
-public class Project {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column
-    private Boolean activated;
-
-    @OneToOne( mappedBy = "project",cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    private User projectLeader;
-
-    @OneToMany(mappedBy = "projects", cascade = CascadeType.PERSIST)
-    private Set<User> member = new HashSet<>();
-
-    @JoinColumn
+public class Project extends PimBase {
+    @JoinColumn(nullable = false, name = "group_id")
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
     private CompanyGroup companyGroup;
 
-    @Column
-    private LocalDate finishingDate;
+    @Column(nullable = false, unique = true)
+    private int projectNumber;
 
-    @Column
+    @Column(nullable = false, length = 50)
+    private String name;
+    @Column(nullable = false, length = 50)
     private String customer;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private Set<Task> tasks = new HashSet<>();
+    @Column(name = "status", nullable = true)
+    private Enum<ProjectStatus> projectStatus;
+
+    @Column(nullable = false)
+    private LocalDate startDate;
+
+    @Column
+    private LocalDate endDate;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "project_employee",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id")
+    )
+    private Set<Employee> members = new HashSet<>();
+
 
     public Project() {
-    }
-
-    public Project(String name, LocalDate finishingDate) {
-        this.name = name;
-        this.finishingDate = finishingDate;
-    }
-    public Project(String name, LocalDate finishingDate, Boolean activated) {
-        this.name = name;
-        this.finishingDate = finishingDate;
-        this.activated = activated;
-    }
-    public Project(String name, LocalDate finishingDate, Boolean activated, User projectLeader){
-        this.setProjectLeader(projectLeader);
-        this.name = name;
-        this.activated = activated;
-        this.finishingDate = finishingDate;
-    }
-
-
-    public Project(Long id, String name, LocalDate finishingDate) {
-        this.id = id;
-        this.name = name;
-        this.finishingDate = finishingDate;
-    }
-
-    public static Project copy(Project project) {
-        Project newProject = new Project();
-        newProject.setName(project.getName());
-        newProject.setCustomer(project.getCustomer());
-        newProject.setActivated(project.getActivated());
-        newProject.setTasks(project.getTasks());
-        newProject.setProjectLeader(project.getProjectLeader());
-        newProject.setMember(project.getMember());
-        newProject.setCompanyGroup(project.getCompanyGroup());
-        newProject.setFinishingDate(project.getFinishingDate());
-        return newProject;
-    }
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -98,13 +56,14 @@ public class Project {
         this.name = name;
     }
 
-    public LocalDate getFinishingDate() {
-        return finishingDate;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setFinishingDate(LocalDate finishingDate) {
-        this.finishingDate = finishingDate;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
+
 
     public String getCustomer() {
         return customer;
@@ -114,36 +73,16 @@ public class Project {
         this.customer = customer;
     }
 
-    public Set<Task> getTasks() {
-        return tasks;
+    public Set<String> getMemberVisa(){
+        Set<String> membersVisa = new HashSet<>();
+        for (Employee member: this.members ){
+            membersVisa.add(member.getVisa());
+        }
+        return membersVisa;
     }
 
-    public void setTasks(Set<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    public Boolean getActivated() {
-        return activated;
-    }
-
-    public void setActivated(Boolean activated) {
-        this.activated = activated;
-    }
-
-    public User getProjectLeader() {
-        return projectLeader;
-    }
-
-    public void setProjectLeader(User projectLeader) {
-        this.projectLeader = projectLeader;
-    }
-
-    public Set<User> getMember() {
-        return member;
-    }
-
-    public void setMember(Set<User> member) {
-        this.member = member;
+    public void setMember(Set<Employee> members) {
+        this.members = members;
     }
 
     public CompanyGroup getCompanyGroup() {
@@ -153,4 +92,34 @@ public class Project {
     public void setCompanyGroup(CompanyGroup companyGroup) {
         this.companyGroup = companyGroup;
     }
+
+    public Enum<ProjectStatus> getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(Enum<ProjectStatus> projectStatus) {
+        this.projectStatus = projectStatus;
+    }
+
+
+    public void setMembers(List<Employee> members) {
+        this.members = Set.of((Employee) members);
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public int getProjectNumber() {
+        return projectNumber;
+    }
+
+    public void setProjectNumber(int projectNumber) {
+        this.projectNumber = projectNumber;
+    }
+
 }

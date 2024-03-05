@@ -1,25 +1,29 @@
 package vn.elca.training.model.dto;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
+import vn.elca.training.model.ProjectStatus;
 import java.time.LocalDate;
+import java.util.Set;
 
 /**
  * @author gtn
  *
  */
 public class ProjectDto {
-    private Long id;
+    private int projectNumber;
     private String name;
+    private String customer;
+    private String groupName;
+    private Set<String> membersVisa;
+    private Enum<ProjectStatus> status;
 
-    private LocalDate finishingDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
-    public Long getId() {
-        return id;
+    public int getProjectNumber() {
+        return projectNumber;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProjectNumber(int projectNumber) {
+        this.projectNumber = projectNumber;
     }
 
     public String getName() {
@@ -30,11 +34,51 @@ public class ProjectDto {
         this.name = name;
     }
 
-    public LocalDate getFinishingDate() {
-        return finishingDate;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setFinishingDate(LocalDate finishingDate) {
-        this.finishingDate = finishingDate;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public Set<String> getMembersVisa() {
+        return membersVisa;
+    }
+
+    public void setMemberVisa(Set<String> membersVisa) {
+        this.membersVisa = membersVisa;
+    }
+
+    public Enum<ProjectStatus> getStatus() {
+        return status;
+    }
+
+    public void setStatus(Enum<ProjectStatus> status) {
+        this.status = status;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 }

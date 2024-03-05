@@ -1,12 +1,11 @@
 package vn.elca.training.util;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import vn.elca.training.model.dto.*;
 import vn.elca.training.model.entity.Project;
-import vn.elca.training.model.entity.Task;
-import vn.elca.training.model.entity.User;
-
-import java.util.stream.Collectors;
+import vn.elca.training.repository.CompanyGroupRepository;
+import vn.elca.training.repository.UserRepository;
 
 /**
  * @author gtn
@@ -17,47 +16,31 @@ public class  ApplicationMapper {
         // Mapper utility class
     }
 
-    public OutputProjectDto projectToOutputProjectDto(Project entity){
-        OutputProjectDto outputProjectDto = new OutputProjectDto();
-        outputProjectDto.setId(entity.getId());
-        outputProjectDto.setCustomer(entity.getCustomer());
-        outputProjectDto.setFinishingDate(entity.getFinishingDate());
-        outputProjectDto.setName(entity.getName());
-        return outputProjectDto;
-    }
-    public Project inputProjectToProject(Project projectToUpdate, InputProjectDto entity){
-        if (!entity.getName().isBlank()) projectToUpdate.setName(entity.getName());
-        if (!entity.getCustomer().isBlank()) projectToUpdate.setCustomer(entity.getCustomer());
-        projectToUpdate.setFinishingDate(entity.getFinishingDate());
-        return projectToUpdate;
-    }
-    public ProjectDto projectToProjectDto(Project entity) {
+    @Autowired
+    CompanyGroupRepository companyGroupRepository;
+    @Autowired
+    UserRepository userRepository;
+
+    public ProjectDto projectToProjectDto(Project entity){
         ProjectDto dto = new ProjectDto();
-        dto.setId(entity.getId());
+        dto.setProjectNumber(entity.getProjectNumber());
         dto.setName(entity.getName());
-        dto.setFinishingDate(entity.getFinishingDate());
-
+        dto.setGroupName(entity.getCompanyGroup().getGroupLeader().getFirstName());
+        dto.setCustomer(entity.getCustomer());
+        dto.setMemberVisa(entity.getMemberVisa());
+        dto.setStatus(entity.getProjectStatus());
+        dto.setEndDate(entity.getEndDate());
+        dto.setStartDate(entity.getStartDate());
         return dto;
     }
-
-    public TaskDto taskToTaskDto(Task task) {
-        TaskDto dto = new TaskDto();
-        dto.setId(task.getId());
-        dto.setTaskName(task.getName());
-        dto.setDeadline(task.getDeadline());
-        dto.setProjectName(task.getProject() != null
-                ? task.getProject().getName()
-                : null);
-
-        return dto;
-    }
-
-    public UserDto userToUserDto(User user) {
-        UserDto dto = new UserDto();
-        dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
-        dto.setTasks(user.getTasks().stream().map(this::taskToTaskDto).collect(Collectors.toList()));
-
-        return dto;
-    }
+    public Project projectDtoToProject(Project project, ProjectDto dto){
+        project.setProjectNumber(dto.getProjectNumber());
+        project.setCustomer(dto.getCustomer());
+        project.setName(dto.getName());
+        project.setProjectStatus(dto.getStatus());
+        project.setStartDate(dto.getStartDate());
+        project.setMembers(userRepository.findMembersByVisa(dto.getMembersVisa()));
+        project.setEndDate(dto.getEndDate());
+        return project;
+    };
 }

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 import vn.elca.training.service.ProjectService;
-import vn.elca.training.service.impl.dummy.FirstDummyProjectServiceImpl;
 
 /**
  * @author vlp

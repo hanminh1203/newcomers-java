@@ -1,0 +1,91 @@
+<div>
+    <h3 *ngIf="!project">New Project</h3>
+    <h3 *ngIf="project">Edit Project information</h3>
+            <form [formGroup]="projectForm">
+                <div class="project-form">
+                    <div [hidden]="projectForm.valid" class="alert alert-danger">
+                        Please enter all the mandatory fields (*)
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="require" for="project-number" >Project number</label>
+                            </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" formControlName="projectNumber" [attr.disabled]="project" >
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="require">Project name </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" formControlName="projectName">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="require">Customer </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" formControlName="projectCustomer">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="require">Group </label>
+                        </div>
+                        <div class=" col-sm-3">
+                            <select class="form-control" formControlName="projectGroup">
+                                <option *ngFor="let g of group" [value]="g">{{g}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>Member </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" formControlName="projectMember">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="require">Status </label>
+                        </div>
+                        <div class=" col-sm-3">
+                            <select class="form-control" formControlName="projectStatus">
+                                <option *ngFor="let s of status" [value]="s" >{{ s }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="date row">
+                        <div class="col-sm-3">
+                        <label class="require">Start date</label> 
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="date" class="form-control" formControlName="projectStartDate">
+                    </div>
+                    <div class="col-sm-3 end-date">
+                        <label for="end-date">End date</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="date" name="end-date" class="form-control" formControlName="projectEndDate">
+                    </div>
+                </div>
+                    </div>
+                    <div class="row button">
+                        <div class="col-sm-5"> 
+                        </div>
+                        <div class="col-sm-3 btn cancel-button">
+                            <button class="form-control" type="button">Cancel</button>
+                        </div>
+                        <div class="col-sm-1"></div>
+                            <div class="col-sm-3 btn">
+                                <button class="form-control" type="submit"><p *ngIf="!project">Create project</p><p *ngIf="project">Edit project</p></button>
+                            </div>
+        </div>
+    </form>
+    <div *ngIf="project"> {{project| json}}</div>
+</div>

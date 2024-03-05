@@ -1,16 +1,11 @@
 package vn.elca.training.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import vn.elca.training.ApplicationWebConfig;
 import vn.elca.training.model.entity.Project;
+import vn.elca.training.model.exception.ProjectNotFoundException;
 import vn.elca.training.repository.ProjectRepository;
 import vn.elca.training.service.ProjectService;
-
-import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,34 +14,22 @@ import java.util.Optional;
  *
  */
 @Service
-@Profile("!dummy | dev")
 public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
 
     @Override
-    public Project maintainProject(long id) {
-      Project project = projectRepository.findById(id).orElse(null);
-        try{
-            Project maintainProject = Project.copy(project);
-            project.setActivated(false);
-            projectRepository.save(project);
-            maintainProject.setName(project.getName()+"Maint."+ Year.now().getValue());
+    public Project findById(long id) throws ProjectNotFoundException {
 
-            return projectRepository.save(maintainProject);
-        } catch (NullPointerException e){
-            System.out.print(e.toString());
-            return null;
+        Optional<Project> optionalProject = projectRepository.findById(id);
+        if(optionalProject.isPresent()){
+            return optionalProject.get();
+        }
+        else {
+            throw new ProjectNotFoundException(id);
         }
     }
-
-    @Override
-    public Project updateProject(long id, Project updateProject) {
-
-        return updateProject;
-    }
-
     @Override
     public List<Project> findAll() {
         return projectRepository.findAll();
@@ -57,15 +40,19 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.findProjectByName(keyWord);
     }
 
-    @Override
-    public Optional<Project> findById(long id) {
-        return null;
-    }
-
 
     @Override
     public long count() {
         return projectRepository.count();
+    }
+
+    @Override
+    public Project updateProject(long id, Project updateProject){
+        Project project = projectRepository.findById(id).orElseThrow( ()-> new RuntimeException("Not found"));
+        project.setName(updateProject.getName());
+        project.setCustomer(updateProject.getCustomer());
+        project.setEndDate(updateProject.getEndDate());
+        return projectRepository.save(project);
     }
 
 }

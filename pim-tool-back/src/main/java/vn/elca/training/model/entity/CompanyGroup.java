@@ -42,4 +42,5 @@ public class CompanyGroup extends PimBase{
         this.projects.remove(project);
     }
 
+
 }

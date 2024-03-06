@@ -27,7 +27,8 @@ public class Project extends PimBase {
     @Column(nullable = false, length = 50)
     private String customer;
 
-    @Column(name = "status", nullable = true)
+
+    @Column(name = "status", nullable = true) //TODO: nullable = false
     private Enum<ProjectStatus> projectStatus;
 
     @Column(nullable = false)
@@ -40,7 +41,7 @@ public class Project extends PimBase {
     @JoinTable(
             name = "project_employee",
             joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "employee_id")
+            inverseJoinColumns = @JoinColumn(name = "employee_id", nullable = false)
     )
     private Set<Employee> members = new HashSet<>();
 
@@ -81,10 +82,6 @@ public class Project extends PimBase {
         return membersVisa;
     }
 
-    public void setMember(Set<Employee> members) {
-        this.members = members;
-    }
-
     public CompanyGroup getCompanyGroup() {
         return companyGroup;
     }
@@ -103,7 +100,7 @@ public class Project extends PimBase {
 
 
     public void setMembers(List<Employee> members) {
-        this.members = Set.of((Employee) members);
+        this.members = new HashSet<>(members);
     }
 
     public LocalDate getStartDate() {

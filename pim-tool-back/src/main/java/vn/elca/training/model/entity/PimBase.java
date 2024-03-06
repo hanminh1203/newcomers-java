@@ -14,4 +14,15 @@ public class PimBase implements Serializable {
     @Column(nullable = false)
     private long version;
 
+    public Long getId() {
+        return id;
+    }
+
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
+    }
 }

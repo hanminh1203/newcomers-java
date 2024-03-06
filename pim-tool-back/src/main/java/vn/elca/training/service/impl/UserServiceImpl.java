@@ -8,6 +8,7 @@ import vn.elca.training.model.entity.Employee;
 import vn.elca.training.repository.UserRepository;
 import vn.elca.training.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +23,13 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
 
-
-
+    @Override
+    public List<String> getEmployeeVisa() {
+        List<Employee> employees = userRepository.findAll();
+        List<String> allEmployeeVisas = new ArrayList<>();
+        for (Employee employee: employees){
+            allEmployeeVisas.add(employee.getVisa());
+        }
+        return allEmployeeVisas;
+    }
 }

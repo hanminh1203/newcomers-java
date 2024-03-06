@@ -11,9 +11,9 @@ public class ProjectDto {
     private int projectNumber;
     private String name;
     private String customer;
-    private String groupName;
-    private Set<String> membersVisa;
-    private Enum<ProjectStatus> status;
+    private Long groupId;
+    private String membersVisa;
+    private String status;
 
     private LocalDate startDate;
     private LocalDate endDate;
@@ -50,27 +50,28 @@ public class ProjectDto {
         this.customer = customer;
     }
 
-    public String getGroupName() {
-        return groupName;
+
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
-    public Set<String> getMembersVisa() {
+    public String getMembersVisa() {
         return membersVisa;
     }
 
-    public void setMemberVisa(Set<String> membersVisa) {
+    public void setMemberVisa(String membersVisa) {
         this.membersVisa = membersVisa;
     }
 
-    public Enum<ProjectStatus> getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Enum<ProjectStatus> status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -81,4 +82,5 @@ public class ProjectDto {
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
+
 }

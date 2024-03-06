@@ -27,7 +27,6 @@ public class Employee extends PimBase{
     private LocalDate birthDate;
 
     @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
-    @Column
     @JsonIgnore
     private Set<Project> projects = new HashSet<>();
 

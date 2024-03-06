@@ -1,7 +1,7 @@
 <div>
     <h3 *ngIf="!project">New Project</h3>
     <h3 *ngIf="project">Edit Project information</h3>
-            <form [formGroup]="projectForm">
+            <form [formGroup]="projectForm" (ngSubmit)="Submit()">
                 <div class="project-form">
                     <div [hidden]="projectForm.valid" class="alert alert-danger">
                         Please enter all the mandatory fields (*)
@@ -11,7 +11,7 @@
                             <label class="require" for="project-number" >Project number</label>
                             </div>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control" formControlName="projectNumber" [attr.disabled]="project" >
+                            <input type="number" class="form-control" formControlName="projectNumber" [attr.disabled]="project" >
                         </div>
                     </div>
                     <div class="row">
@@ -87,5 +87,6 @@
                             </div>
         </div>
     </form>
-    <div *ngIf="project"> {{project| json}}</div>
+    <div *ngIf="visas"> {{visas| json}}</div>
+    <div *ngIf="notValidVisasLen"> {{notValidVisas| json}}</div>
 </div>

@@ -3,8 +3,11 @@ package vn.elca.training.service;
 import java.util.List;
 import java.util.Optional;
 
+import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.entity.Project;
+import vn.elca.training.model.exception.GroupNotFoundException;
 import vn.elca.training.model.exception.ProjectNotFoundException;
+import vn.elca.training.model.exception.StatusNotAvailableException;
 
 import javax.transaction.Transactional;
 
@@ -14,7 +17,7 @@ import javax.transaction.Transactional;
  */
 public interface ProjectService {
 
-    Project updateProject(long id, Project updateProject);
+    ProjectDto updateProject(long id, ProjectDto updateProject) throws ProjectNotFoundException, StatusNotAvailableException, GroupNotFoundException;
     List<Project> findAll();
 
     List<Project> findByProjectName(String keyWord);

@@ -4,8 +4,7 @@ import { NewProjectFormComponent } from './new-project-form/new-project-form.com
 
 
 const routes: Routes = [
-  { path: 'projects/new', component: NewProjectFormComponent },
-  { path: 'projects/:id', component: NewProjectFormComponent }
+  { path: 'projects/:id', component: NewProjectFormComponent },
 ];
 
 @NgModule({

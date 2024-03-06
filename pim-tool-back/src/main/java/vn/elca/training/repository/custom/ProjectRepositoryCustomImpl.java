@@ -26,4 +26,12 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
                 .where(QProject.project.name.contains(keyWord))
                 .fetchFirst();
     }
+
+    @Override
+    public long countByNumber(int projectNumber) {
+        return new JPAQuery<Project>(em)
+                .from(QProject.project)
+                .where(QProject.project.projectNumber.eq(projectNumber))
+                .fetchCount();
+    }
 }

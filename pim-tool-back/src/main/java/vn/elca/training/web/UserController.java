@@ -1,6 +1,8 @@
 package vn.elca.training.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.elca.training.repository.CompanyGroupRepository;
 import vn.elca.training.model.entity.Employee;
@@ -24,7 +26,7 @@ public class UserController extends AbstractApplicationController {
     CompanyGroupRepository companyGroupRepository;
 
     @GetMapping("")
-    List<String> getEmployeeVisa(){
-        return userService.getEmployeeVisa();
+    ResponseEntity<List<String>> getEmployeeVisa(){
+        return new ResponseEntity<>(userService.getEmployeeVisa(), HttpStatus.OK) ;
     }
 }

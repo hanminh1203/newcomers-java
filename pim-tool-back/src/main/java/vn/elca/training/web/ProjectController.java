@@ -43,42 +43,48 @@ public class ProjectController extends AbstractApplicationController {
     private ProjectRepository projectRepository;
 
     @GetMapping("/search")
-    public List<ProjectDto> search() {
-        return projectService.findAll()
+    public ResponseEntity<List<ProjectDto>> search() {
+        List<ProjectDto> projectDtoList = projectService.findAll()
                 .stream()
                 .map(mapper::projectToProjectDto)
                 .collect(Collectors.toList());
+        return new ResponseEntity<>(projectDtoList, HttpStatus.OK);
     }
 
     @GetMapping("/search/{keyword}")
-    public List<ProjectDto> searchByKeyWord(@PathVariable String keyword) {
-        return projectService.findByProjectName(keyword)
+    public ResponseEntity<List<ProjectDto>> searchByKeyWord(@PathVariable String keyword) {
+        List<ProjectDto> projectDtoList = projectService.findByProjectName(keyword)
                 .stream()
                 .map(mapper::projectToProjectDto)
                 .collect(Collectors.toList());
+        return new ResponseEntity<>(projectDtoList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ProjectDto searchById(@PathVariable long id) throws ProjectNotFoundException {
+    public ResponseEntity<ProjectDto> searchById(@PathVariable long id) throws ProjectNotFoundException {
         Project project = projectService.findById(id);
-        return mapper.projectToProjectDto(project);
+        ProjectDto projectDto = mapper.projectToProjectDto(project);
+        return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
 
 
     @PutMapping("/{id}")
-    public ProjectDto UpdateProject(@PathVariable long id, @RequestBody ProjectDto inputProjectDto) throws ProjectNotFoundException, StatusNotAvailableException, GroupNotFoundException {
-        return projectService.updateProject(id, inputProjectDto);
+    public ResponseEntity<ProjectDto> UpdateProject(@PathVariable long id, @RequestBody ProjectDto inputProjectDto) throws ProjectNotFoundException, StatusNotAvailableException, GroupNotFoundException {
+        ProjectDto updatedProjectDto = projectService.updateProject(id, inputProjectDto);
+        return new ResponseEntity(updatedProjectDto, HttpStatus.OK);
     }
 
     @PostMapping("")
-    public Project CreateNewProject(@RequestBody ProjectDto inputProjectDto) throws ProjectNumberAlreadyExistsException, StatusNotAvailableException, GroupNotFoundException {
+    public ResponseEntity<ProjectDto> CreateNewProject(@RequestBody ProjectDto inputProjectDto) throws ProjectNumberAlreadyExistsException, StatusNotAvailableException, GroupNotFoundException {
         int projectNumber = inputProjectDto.getProjectNumber();
         if(projectRepository.countByNumber(projectNumber)>0){
             throw new ProjectNumberAlreadyExistsException(projectNumber);
         }
         else {
             Project saveProject = new Project();
-            return projectRepository.save(mapper.projectDtoToProject(saveProject, inputProjectDto));
+             saveProject = projectRepository.save(mapper.projectDtoToProject(saveProject, inputProjectDto));
+             ProjectDto savedProjectDto = mapper.projectToProjectDto(saveProject);
+            return new ResponseEntity(savedProjectDto , HttpStatus.OK);
         }
     }
 }

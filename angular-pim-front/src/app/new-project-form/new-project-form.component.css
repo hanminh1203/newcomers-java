@@ -42,3 +42,11 @@ div .project-form{
     content: ' *';
     color: red;
 }
+div .visaError{
+    margin-top: -30px;
+    margin-bottom: 38px;
+    
+}
+.error {
+    color: red;
+}

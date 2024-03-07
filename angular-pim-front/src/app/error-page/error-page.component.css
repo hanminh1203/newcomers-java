@@ -1,0 +1,17 @@
+.error-page{
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+img{
+    float: left;
+    margin-left: 13em;
+}
+a, p {
+    font-size: 26px;
+    display: inline;
+}
+.message{
+    margin-left: 3em;
+}

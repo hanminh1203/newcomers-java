@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NewProjectFormComponent } from './new-project-form/new-project-form.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 
 const routes: Routes = [
   { path: 'projects/:id', component: NewProjectFormComponent },
+  { path: '404', component: ErrorPageComponent },
+  { path: '**', redirectTo: '/404' } 
 ];
 
 @NgModule({

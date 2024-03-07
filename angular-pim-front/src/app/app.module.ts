@@ -8,12 +8,14 @@ import { NewProjectFormComponent } from './new-project-form/new-project-form.com
 import { PageHeaderComponent } from './page-header/page-header.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { ErrorPageComponent } from './error-page/error-page.component';
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
     NewProjectFormComponent,
     PageHeaderComponent,
+    ErrorPageComponent,
   ],
   imports: [
     BrowserModule,

@@ -8,6 +8,7 @@ import java.util.Set;
  *
  */
 public class ProjectDto {
+    private long id;
     private int projectNumber;
     private String name;
     private String customer;
@@ -83,4 +84,11 @@ public class ProjectDto {
         this.startDate = startDate;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
+    }
 }

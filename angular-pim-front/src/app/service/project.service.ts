@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Project } from '../project';
 import { CommonService } from './common.service';
@@ -14,6 +14,19 @@ export class ProjectService {
   };
 
   constructor(private http: HttpClient, private commonService: CommonService) { }
+
+  getAllProjects(): Observable<Project[]>{
+    return this.http.get<Project[]>(this.apiUrl)
+      .pipe(
+        catchError(this.commonService.handleError)
+      )
+  }
+  searchByCriteria(criteria: string|null): Observable<Project[]>{
+    return this.http.get<Project[]>(`${this.apiUrl}/search/${criteria}`)
+      .pipe(
+        catchError(this.commonService.handleError)
+      )
+  }
 
   getProjectById(id: number): Observable<Project> {
     return this.http.get<Project>(`${this.apiUrl}/${id}`)
@@ -34,5 +47,20 @@ export class ProjectService {
     .pipe(
       catchError(this.commonService.handleError)
     );
+  }
+  deleteById(id: number|undefined){
+    return this.http.delete(`${this.apiUrl}/${id}`)
+      .pipe(
+        catchError(this.commonService.handleError)
+      )
+  }
+  deleteAllByIds(ids: any){
+    const params = new HttpParams().set('ids', ids.toString());
+    return this.http.delete<any>(`${this.apiUrl}/delete`, { params })
+      .pipe(
+        catchError(this.commonService.handleError)
+      );
+  
+    
   }
 }

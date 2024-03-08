@@ -21,8 +21,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
     @ExceptionHandler(EndDateB4StartDateException.class)
     protected ResponseEntity<Object> endDateBeforeStartDateHandle(Exception ex, WebRequest request) {
-        String bodyResponse = ex.getMessage();
-        return handleExceptionInternal(ex, bodyResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
+        ErrorResponse errorResponse = new ErrorResponse("end date conflicts", ex.getMessage());
+        return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
     @ExceptionHandler(ProjectNumberAlreadyExistsException.class)
     protected ResponseEntity<Object> projectNumberIsAlreadyExistHandle(Exception ex, WebRequest request) {
@@ -31,13 +31,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
     @ExceptionHandler(StatusNotAvailableException.class)
     protected ResponseEntity<Object> statusNotAvailableHandle(Exception ex, WebRequest request) {
-        String bodyResponse = ex.getMessage();
-        return handleExceptionInternal(ex, bodyResponse, new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request);
+        ErrorResponse errorResponse = new ErrorResponse("status not available", ex.getMessage());
+        return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request);
     }
     @ExceptionHandler(VisaNotExistException.class)
-    protected ResponseEntity<Object> visaNotExistHandle(Exception ex, WebRequest request) {
-        String bodyResponse = ex.getMessage();
-        return handleExceptionInternal(ex, bodyResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    protected ResponseEntity<Object> visaNotExistHandle(VisaNotExistException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse("visa not available", ex.getVisas());
+        return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
 //    @ExceptionHandler(ApplicationUnexpectedException.class)

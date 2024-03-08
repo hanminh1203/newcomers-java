@@ -48,7 +48,7 @@
                         </div>
                         <div class="col-sm-9" >
                             <input type="text" class="form-control" formControlName="projectMember">
-                            <div *ngIf="notValidVisasExist" class="error visaError" >The following visas do not exist: {{notValidVisas}}</div>
+                            <div *ngIf="unavailableVisasArr" class="error visaError" >The following visas do not exist: {{unavailableVisasArr}}</div>
                         </div>  
                     </div>
 

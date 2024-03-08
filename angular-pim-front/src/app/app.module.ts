@@ -9,6 +9,7 @@ import { PageHeaderComponent } from './page-header/page-header.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ErrorPageComponent } from './error-page/error-page.component';
+import { ProjectListComponent } from './project-list/project-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -16,6 +17,7 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     NewProjectFormComponent,
     PageHeaderComponent,
     ErrorPageComponent,
+    ProjectListComponent,
   ],
   imports: [
     BrowserModule,

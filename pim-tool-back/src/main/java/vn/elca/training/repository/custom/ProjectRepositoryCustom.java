@@ -9,4 +9,6 @@ public interface ProjectRepositoryCustom {
     Project findOneProjectByName(String keyWord);
 
     long countByNumber(int projectNumber);
+
+    void deleteAllByIds(List<Long> ids);
 }

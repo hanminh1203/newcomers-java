@@ -5,7 +5,7 @@ public class StatusNotAvailableException extends Exception{
     final String status;
 
     public StatusNotAvailableException(String status) {
-        super(String.format("Status "));
+        super(String.format("Status %s not available", status));
         this.status = status;
     }
 }

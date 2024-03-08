@@ -33,8 +33,7 @@ export class NewProjectFormComponent implements OnInit {
   }
   // error handler
   existProjectNumberError? : unknown;
-  notValidVisas?: string[];
-  notValidVisasExist: unknown;
+  unavailableVisasArr?: string;
 
   
   
@@ -66,6 +65,11 @@ export class NewProjectFormComponent implements OnInit {
       break;
       case "project number exist": this.existProjectNumberError = true;
       break;
+      case "visa not available": this.unavailableVisasArr = error.detail;
+      break;
+      case "not an id": this.redirectOnError(error);
+      break;
+      
       default: console.log(error.message);
     }
 
@@ -77,21 +81,24 @@ export class NewProjectFormComponent implements OnInit {
   
 
   ngOnInit(){
-    if(this.projectId = Number(this.route.snapshot.paramMap.get('id'))){
+    let projectIdPath = this.route.snapshot.paramMap.get('id')
+    if(this.projectId = Number(projectIdPath)){
     this.getProject(this.projectId)
     }
-    else{
-
+    else if("new" == String(projectIdPath)){
+      // do nothing 
     }
-
-    this.employeeService.getVisas().subscribe(data => 
-      data.forEach(visa => this.visas.push(visa)));
+    else{
+      let errorResponse: ErrorResponse = {
+        message: "not an id",
+        detail: `${projectIdPath} is not an id`,
+        name: ''
+      };
+      this.redirectOnError(errorResponse)
+    }
     // always run code, get all the group id for form selection option
     this.groupService.getGroupIds().subscribe(data => 
       data.forEach(id => this.group.push(id)));
-
-    // another always run code, get all employees visa
-   
   };
 
   projectForm = new FormGroup({
@@ -107,16 +114,12 @@ export class NewProjectFormComponent implements OnInit {
   })
   
 Submit(){
-  let visasFromForm: string[] = (this.projectForm.controls.projectMember.value?.split(",") || []).map(item => item.trim());
-  this.notValidVisas = this.employeeService.checkIfNotExists(visasFromForm, this.visas);
-  // check if notvalidVisas return a empty array
-  this.notValidVisasExist = this.notValidVisas[0];
   this.project = new Project(this.projectForm.controls.projectNumber.value, this.projectForm.controls.projectName.value, 
     this.projectForm.controls.projectCustomer.value, this.projectForm.controls.projectGroup.value, 
     this.projectForm.controls.projectMember.value, this.projectForm.controls.projectStartDate.value,
     this.projectForm.controls.projectStatus.value, this.projectForm.controls.projectEndDate.value )
 
-  if(this.projectId = Number(this.route.snapshot.paramMap.get('id'))){
+  if(this.projectId){
       this.projectService.updateProject(this.projectId, this.project).subscribe(
         (data) =>{
           this.submited = true
@@ -126,13 +129,13 @@ Submit(){
         }
       )
     }
-  else if("new" == String(this.route.snapshot.paramMap.get('id'))){
+  else{
       this.projectService.createProject(this.project).subscribe(
         (data) =>{
           this.submited = true
         },
         (error) => {
-          this.existProjectNumberError = true;
+          this.decideHandleErrorWay(error);
         }
       )
     }

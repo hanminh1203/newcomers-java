@@ -2,11 +2,13 @@ package vn.elca.training.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.entity.Project;
 import vn.elca.training.model.exception.GroupNotFoundException;
 import vn.elca.training.model.exception.ProjectNotFoundException;
 import vn.elca.training.model.exception.StatusNotAvailableException;
+import vn.elca.training.model.exception.VisaNotExistException;
 import vn.elca.training.repository.CompanyGroupRepository;
 import vn.elca.training.repository.ProjectRepository;
 import vn.elca.training.repository.UserRepository;
@@ -23,6 +25,7 @@ import java.util.logging.Logger;
  *
  */
 @Service
+@Transactional
 public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
@@ -64,17 +67,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDto updateProject(long id, ProjectDto updateProject) throws ProjectNotFoundException, StatusNotAvailableException, GroupNotFoundException {
+    public ProjectDto updateProject(long id, ProjectDto updateProject) throws ProjectNotFoundException, StatusNotAvailableException, GroupNotFoundException, VisaNotExistException {
         Project project = projectRepository.findById(id).orElseThrow(()-> new ProjectNotFoundException(id));
-        project.setProjectNumber(updateProject.getProjectNumber());
-        project.setName(updateProject.getName());
-        project.setCustomer(updateProject.getCustomer());
-        project.setCompanyGroup(companyGroupService.findById(updateProject.getGroupId()));
-        project.setMembers(userRepository.findMembersByVisa(mapper.stringVisasToSetVisas(updateProject.getMembersVisa())));
-        project.setProjectStatus(mapper.stringStatustoEnumStatus(updateProject.getStatus()));
-        project.setStartDate(updateProject.getStartDate());
-        project.setEndDate(updateProject.getEndDate());
-        Project savedProject = projectRepository.save(project);
+        Project savedProject = projectRepository.save(mapper.projectDtoToProject(project, updateProject));
         return mapper.projectToProjectDto(savedProject);
     }
 

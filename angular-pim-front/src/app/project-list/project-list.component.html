@@ -1,0 +1,35 @@
+<form [formGroup]="searchForm">
+  <div class="row">
+    <input class="col-md-4" placeholder="Project number, name, customer name" formControlName="criteria">
+    <select class="col-md-3" formControlName="status">
+      <option *ngFor="let s of status" [value]="s" >{{ s }}</option>
+    </select>
+    <button type="button" (click)="search()" class="col-md-2">Search Project</button>
+    <button (click)="reset()" class="col-md-2">Reset search</button>
+  </div>
+</form>
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Number</th>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Customer</th>
+      <th>Start Date</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let project of projectList">
+      <td><input type="checkbox" [disabled]="project.status!==status[0]" [checked]="isSelected(project)" (change)="toggleSelection(project)"></td>
+      <td>{{ project.projectNumber }}</td>
+      <td>{{ project.name }}</td>
+      <td>{{ project.status }}</td>
+      <td>{{ project.customer }}</td>
+      <td>{{ project.startDate }}</td>
+      <td><button *ngIf="project.status ===status[0]" (click)="delete(project)">Delete</button></td>
+    </tr>
+    <button *ngIf="selectedProjects[0]" (click)="deleteAll()">delete</button>
+  </tbody>
+</table>

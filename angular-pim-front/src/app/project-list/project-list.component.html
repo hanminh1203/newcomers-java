@@ -1,35 +1,42 @@
-<form [formGroup]="searchForm">
+<div class="project-list">
+  <h4>Project list</h4>
+  <form class="search-form" [formGroup]="searchForm">
   <div class="row">
     <input class="col-md-4" placeholder="Project number, name, customer name" formControlName="criteria">
     <select class="col-md-3" formControlName="status">
+      <option value=""hidden>Project status</option>
       <option *ngFor="let s of status" [value]="s" >{{ s }}</option>
     </select>
     <button type="button" (click)="search()" class="col-md-2">Search Project</button>
     <button (click)="reset()" class="col-md-2">Reset search</button>
   </div>
 </form>
-<table>
-  <thead>
-    <tr>
-      <th></th>
-      <th>Number</th>
-      <th>Name</th>
-      <th>Status</th>
-      <th>Customer</th>
-      <th>Start Date</th>
-      <th>Delete</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let project of projectList">
-      <td><input type="checkbox" [disabled]="project.status!==status[0]" [checked]="isSelected(project)" (change)="toggleSelection(project)"></td>
-      <td>{{ project.projectNumber }}</td>
-      <td>{{ project.name }}</td>
-      <td>{{ project.status }}</td>
-      <td>{{ project.customer }}</td>
-      <td>{{ project.startDate }}</td>
-      <td><button *ngIf="project.status ===status[0]" (click)="delete(project)">Delete</button></td>
-    </tr>
-    <button *ngIf="selectedProjects[0]" (click)="deleteAll()">delete</button>
-  </tbody>
-</table>
+  <table>
+    <thead>
+      <tr>
+        <th class="check-box"></th>
+        <th class="project-number">Number</th>
+        <th class="name">Name</th>
+        <th class="status">Status</th>
+        <th class="customer">Customer</th>
+        <th class="start-date">Start Date</th>
+        <th class="delete">Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let project of projectList">
+        <td class="check-box"><input type="checkbox" [disabled]="project.status!==status[0]" [checked]="isSelected(project)" (change)="toggleSelection(project)"></td>
+        <td class="project-number number"><a [routerLink]="['/projects', project.id]">{{ project.projectNumber }}</a></td>
+        <td class="name">{{ project.name }}</td>
+        <td class="status">{{ project.status }}</td>
+        <td class="customer">{{ project.customer }}</td>
+        <td class="start-date">{{ project.startDate }}</td>
+        <td class="delete"><img src="./assets/delete-button.png" *ngIf="project.status ===status[0]" (click)="delete(project)"></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="delete-many" *ngIf="selectedProjects[0]">
+    <p>{{selectedProjectCount}} item(s) selected</p>
+    <p (click)="deleteAll()">delete selected item<img src="./assets/delete-button.png"></p> 
+  </div>
+  

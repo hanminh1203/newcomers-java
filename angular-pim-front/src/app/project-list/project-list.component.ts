@@ -18,6 +18,7 @@ export class ProjectListComponent implements OnInit{
   
   projectList?: Project[];
   selectedProjects: Project[] = [];
+  selectedProjectCount = 0;
 
   searchForm = new FormGroup({
     criteria: new FormControl(''),
@@ -46,23 +47,25 @@ export class ProjectListComponent implements OnInit{
 
     deleteAll(){
       let ids:any[] = [];
-      for(var project of this.selectedProjects){
+      for(let project of this.selectedProjects){
         ids.push(project.id)
+        this.projectList = this.projectList?.filter(p => p !=project)
       }
       this.projectService.deleteAllByIds(ids).subscribe()
-      console.log(ids)
+      this.selectedProjects =[]
     }
 
     toggleSelection(project: Project): void {
       if (this.isSelected(project)) {
         this.selectedProjects = this.selectedProjects.filter(p => p.id !== project.id);
+        this.selectedProjectCount -=1;
       } else {
         this.selectedProjects.push(project);
+        this.selectedProjectCount +=1;
       }
     }
   
     isSelected(project: Project): boolean {
       return this.selectedProjects.some(p => p.id === project.id);
     }
-
 }

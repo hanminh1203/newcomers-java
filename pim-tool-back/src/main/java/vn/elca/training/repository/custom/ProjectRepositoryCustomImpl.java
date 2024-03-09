@@ -9,17 +9,28 @@ import vn.elca.training.model.entity.QProject;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
 public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
     @PersistenceContext
     private EntityManager em;
+
+    @Override
+    public List<Project> findAll() {
+        return new JPAQuery<Project>(em)
+                .from(QProject.project)
+                .orderBy(QProject.project.projectNumber.asc())
+                .fetch();
+    }
+
     @Override
     public List<Project> findProjectByName(String keyWord) {
         return new JPAQuery<Project>(em)
                 .from(QProject.project)
                 .where(QProject.project.name.contains(keyWord))
+                .orderBy(QProject.project.projectNumber.asc())
                 .fetch();
     }
     @Override

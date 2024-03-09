@@ -1,9 +1,7 @@
 .navbar{
     display: flex;
     justify-content: center;
-    margin-top: 1.5em;
-    
-}
-.form{
-    border-left: 0.5px solid black;
+    padding-top: 1.5em;
+    height: 800px;
+    border-right: 0.5px solid black;
 }

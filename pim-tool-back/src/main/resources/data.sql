@@ -13,12 +13,9 @@ VALUES (1, 11, '123', 'Sample Project 1', 'ABC Corp', '2024-03-05', '2024-07-31'
        (2, 22, '124', 'Sample Project 2', 'XYZ Corp', '2024-02-15', '2024-06-30', 1),
        (3, 11, '125', 'Sample Project 3', 'DEF Corp', '2024-04-10', NULL, 1);
 
-
-
 INSERT INTO PROJECT_EMPLOYEE(PROJECT_ID, EMPLOYEE_ID)
 VALUES (1, 111),
        (1, 222),
        (1, 333),
        (2, 111),
-       (2, 222),
-
+       (2, 222);

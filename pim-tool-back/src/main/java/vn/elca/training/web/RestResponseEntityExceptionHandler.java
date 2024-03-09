@@ -11,9 +11,17 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import vn.elca.training.model.entity.ErrorResponse;
 import vn.elca.training.model.exception.*;
 
+import javax.persistence.*;
+
 @ControllerAdvice
 @CrossOrigin(origins = "http://localhost:4200")
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(value = { PersistenceException.class})
+    protected ResponseEntity<Object> databaseExceptionHandle(RuntimeException ex, WebRequest request){
+        ErrorResponse errorResponse = new ErrorResponse("database error", ex.getMessage());
+        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
     @ExceptionHandler(value = {GroupNotFoundException.class, ProjectNotFoundException.class})
     protected ResponseEntity<Object> objectNotFoundHandle(Exception ex, WebRequest request){
         ErrorResponse errorResponse = new ErrorResponse("object not found", ex.getMessage());

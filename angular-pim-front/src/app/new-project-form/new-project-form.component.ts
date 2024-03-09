@@ -17,12 +17,13 @@ import {Location} from '@angular/common';
 })
 export class NewProjectFormComponent implements OnInit {
   constructor( private location: Location, private route: ActivatedRoute, private router: Router, private projectService: ProjectService, 
-    private groupService: GroupService, private employeeService: EmployeeService, private sharedDataService: SharedDataService){}
+    private groupService: GroupService, private employeeService: EmployeeService, private sharedDataService: SharedDataService, 
+    private commonService: CommonService){}
+
   project?: Project;
   projectId? :number;
   status: string[] = ['NEW', 'PLA', 'INP', 'FIN'];
   group: string[] = ['NEW'];
-  visas: string[] = [];
   isProjectExist = false;
   submited = false;
 
@@ -35,6 +36,38 @@ export class NewProjectFormComponent implements OnInit {
   existProjectNumberError? : unknown;
   unavailableVisasArr?: string;
 
+  projectForm = new FormGroup({
+    projectNumber: new FormControl('', Validators.required),
+    projectName: new FormControl('', Validators.required),
+    projectCustomer: new FormControl('', Validators.required),
+    projectGroup: new FormControl(this.status[0], Validators.required),
+    projectMember: new FormControl(''),
+    projectStatus: new FormControl(this.status[0], Validators.required),
+    projectStartDate: new FormControl('', Validators.required),
+    projectEndDate: new FormControl(''),
+
+  })
+
+  ngOnInit(){
+    let projectIdPath = this.route.snapshot.paramMap.get('id')
+    if(this.projectId = Number(projectIdPath)){
+    this.getProject(this.projectId)
+    }
+    else if("new" == String(projectIdPath)){
+      // do nothing 
+    }
+    else{
+      let errorResponse: ErrorResponse = {
+        status: 404,
+        message: "not an id",
+        detail: `${projectIdPath} is not an id`,
+      };
+      this.commonService.redirectOnError(errorResponse)
+    }
+    // always run code, get all the group id for form selection option
+    this.groupService.getGroupIds().subscribe(data => 
+      data.forEach(id => this.group.push(id)));
+  };
   
   
   getProject(projectId: number){
@@ -59,85 +92,54 @@ export class NewProjectFormComponent implements OnInit {
       }
     );
   }
+
+  Submit(){
+    this.project = new Project(this.projectForm.controls.projectNumber.value, this.projectForm.controls.projectName.value, 
+      this.projectForm.controls.projectCustomer.value, this.projectForm.controls.projectGroup.value, 
+      this.projectForm.controls.projectMember.value, this.projectForm.controls.projectStartDate.value,
+      this.projectForm.controls.projectStatus.value, this.projectForm.controls.projectEndDate.value )
+  
+    if(this.projectId){
+        this.projectService.updateProject(this.projectId, this.project).subscribe(
+          (success) =>{
+            this.redirectOnSubmit();
+          },
+          (error) => {
+            this.decideHandleErrorWay(error);
+          }
+        )
+      }
+    else{
+        this.projectService.createProject(this.project).subscribe(
+          (success) =>{
+            this.redirectOnSubmit();
+          },
+          (error) => {
+            this.decideHandleErrorWay(error);
+          }
+        )
+      }
+    }
+  
+    private redirectOnSubmit(){
+      this.router.navigateByUrl('/projects');
+    }
+
+
   private decideHandleErrorWay(error: ErrorResponse){
     switch (error.message){
-      case "object not found": this.redirectOnError(error);
+      case "client side error": this.commonService.redirectOnError(error);
+      break;
+      case "object not found": this.commonService.redirectOnError(error);
       break;
       case "project number exist": this.existProjectNumberError = true;
       break;
       case "visa not available": this.unavailableVisasArr = error.detail;
       break;
-      case "not an id": this.redirectOnError(error);
+      case "not an id": this.commonService.redirectOnError(error);
       break;
-      
       default: console.log(error.message);
     }
 
-  }
-  private redirectOnError(error: ErrorResponse){
-    this.sharedDataService.setError(error.detail);
-    this.router.navigateByUrl('/404');
-  }
-  
-
-  ngOnInit(){
-    let projectIdPath = this.route.snapshot.paramMap.get('id')
-    if(this.projectId = Number(projectIdPath)){
-    this.getProject(this.projectId)
-    }
-    else if("new" == String(projectIdPath)){
-      // do nothing 
-    }
-    else{
-      let errorResponse: ErrorResponse = {
-        message: "not an id",
-        detail: `${projectIdPath} is not an id`,
-        name: ''
-      };
-      this.redirectOnError(errorResponse)
-    }
-    // always run code, get all the group id for form selection option
-    this.groupService.getGroupIds().subscribe(data => 
-      data.forEach(id => this.group.push(id)));
-  };
-
-  projectForm = new FormGroup({
-    projectNumber: new FormControl('', Validators.required),
-    projectName: new FormControl('', Validators.required),
-    projectCustomer: new FormControl('', Validators.required),
-    projectGroup: new FormControl(this.status[0], Validators.required),
-    projectMember: new FormControl(''),
-    projectStatus: new FormControl(this.status[0], Validators.required),
-    projectStartDate: new FormControl('', Validators.required),
-    projectEndDate: new FormControl(''),
-
-  })
-  
-Submit(){
-  this.project = new Project(this.projectForm.controls.projectNumber.value, this.projectForm.controls.projectName.value, 
-    this.projectForm.controls.projectCustomer.value, this.projectForm.controls.projectGroup.value, 
-    this.projectForm.controls.projectMember.value, this.projectForm.controls.projectStartDate.value,
-    this.projectForm.controls.projectStatus.value, this.projectForm.controls.projectEndDate.value )
-
-  if(this.projectId){
-      this.projectService.updateProject(this.projectId, this.project).subscribe(
-        (data) =>{
-          this.submited = true
-        },
-        (error) => {
-          this.decideHandleErrorWay(error);
-        }
-      )
-    }
-  else{
-      this.projectService.createProject(this.project).subscribe(
-        (data) =>{
-          this.submited = true
-        },
-        (error) => {
-          this.decideHandleErrorWay(error);
-        }
-      )
-    }
   }
 }

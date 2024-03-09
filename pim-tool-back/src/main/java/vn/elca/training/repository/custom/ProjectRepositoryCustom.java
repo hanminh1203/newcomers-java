@@ -5,6 +5,7 @@ import vn.elca.training.model.entity.Project;
 import java.util.List;
 
 public interface ProjectRepositoryCustom {
+    List<Project> findAll();
     List<Project> findProjectByName(String keyWord);
     Project findOneProjectByName(String keyWord);
 

@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.elca.training.model.ProjectStatus;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.entity.Project;
 import vn.elca.training.model.exception.*;
@@ -44,32 +45,15 @@ public class ProjectController extends AbstractApplicationController {
 
     @GetMapping("")
     public ResponseEntity<List<ProjectDto>> search() {
-        List<ProjectDto> projectDtoList = projectService.findAll()
-                .stream()
-                .map(mapper::projectToProjectDto)
-                .collect(Collectors.toList());
+        List<ProjectDto> projectDtoList = projectService.findAll();
         return new ResponseEntity<>(projectDtoList, HttpStatus.OK);
     }
 
-    @GetMapping("/search/{keyword}")
-    public ResponseEntity<List<ProjectDto>> searchByKeyWord(@PathVariable String keyword) {
-            List<Project> projects = projectRepository.findAll();
-            List<Project> filterdProjects = new ArrayList<>();
-            String criteria = StringUtils.trimToEmpty(keyword);
-            if (!StringUtils.isBlank(criteria)) {
-                for (Project project : projects) {
-                    if (StringUtils.containsIgnoreCase(project.getName(), criteria)
-                            || StringUtils.containsIgnoreCase("" + project.getProjectNumber(), criteria)
-                            || StringUtils.containsIgnoreCase(project.getCustomer(), criteria)){
-                        filterdProjects.add(project);
-                    }
-                }
-            }
-            List<ProjectDto> projectDtoList = filterdProjects
-                    .stream()
-                    .map(mapper::projectToProjectDto)
-                    .collect(Collectors.toList());
-            return new ResponseEntity<>(projectDtoList, HttpStatus.OK);
+    @GetMapping("/search")
+    public ResponseEntity<List<ProjectDto>> search(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String status) {
+            return new ResponseEntity<>(projectService.search(keyword, status), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

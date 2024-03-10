@@ -4,6 +4,7 @@ import { ProjectService } from '../service/project.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpParams } from '@angular/common/http';
+import { SharedDataService } from '../service/shared-data.service';
 
 @Component({
   selector: 'app-project-list',
@@ -11,33 +12,39 @@ import { HttpParams } from '@angular/common/http';
   styleUrl: './project-list.component.css'
 })
 export class ProjectListComponent implements OnInit{
-  constructor(private projectService: ProjectService,private route: ActivatedRoute, private router: Router){}
+  constructor(private projectService: ProjectService,private route: ActivatedRoute, private router: Router, 
+    private sharedDataService: SharedDataService){}
 
-  status: string[] = ['NEW', 'PLA', 'INP', 'FIN'];
-  searchQuery: any;
-  
+  statusArr: string[] = ['NEW', 'PLA', 'INP', 'FIN'];
+   
   projectList?: Project[];
   selectedProjects: Project[] = [];
-  selectedProjectCount = 0;
-
+  
   searchForm = new FormGroup({
-    criteria: new FormControl(''),
+    searchString: new FormControl(''),
     status: new FormControl('')
   })
-
+  
   ngOnInit(): void {
-    this.projectService.getAllProjects().subscribe(
-      (data)=> this.projectList = data)
-    }
+    this.searchForm.patchValue({
+      searchString: this.sharedDataService.getSearchString(),
+      status: this.sharedDataService.getSearchStatus()
+    })
+    this.search()
+  }
 
   search(): void {
-    this.projectService.searchByCriteria(this.searchForm.controls.criteria.value).subscribe(
+    this.sharedDataService.setSearchString(this.searchForm.controls.searchString.value);
+    this.sharedDataService.setSearchStatus(this.searchForm.controls.status.value);
+    this.projectService.search(this.sharedDataService.getSearchString(), this.sharedDataService.getSearchStatus()).subscribe(
       (data) => {this.projectList = data},
       (error) => console.log(error.message))
     }
 
     reset(){
-      this.router.navigateByUrl('/projects');
+      this.sharedDataService.setSearchString('')
+      this.sharedDataService.setSearchStatus('')
+      this.ngOnInit()
     }
 
     delete(project: Project){
@@ -58,10 +65,8 @@ export class ProjectListComponent implements OnInit{
     toggleSelection(project: Project): void {
       if (this.isSelected(project)) {
         this.selectedProjects = this.selectedProjects.filter(p => p.id !== project.id);
-        this.selectedProjectCount -=1;
       } else {
         this.selectedProjects.push(project);
-        this.selectedProjectCount +=1;
       }
     }
   

@@ -21,13 +21,15 @@ export class ProjectService {
         catchError(this.commonService.handleError)
       )
   }
-  searchByCriteria(criteria: string|null): Observable<Project[]>{
-    return this.http.get<Project[]>(`${this.apiUrl}/search/${criteria}`)
+  search(searchString: string, status: string): Observable<Project[]> {
+    let params = new HttpParams();
+    params = params.append('keyword', searchString);
+    params = params.append('status', status); 
+    return this.http.get<Project[]>(`${this.apiUrl}/search`, { params })
       .pipe(
         catchError(this.commonService.handleError)
-      )
+      );
   }
-
   getProjectById(id: number): Observable<Project> {
     return this.http.get<Project>(`${this.apiUrl}/${id}`)
       .pipe(
@@ -55,7 +57,7 @@ export class ProjectService {
       )
   }
   deleteAllByIds(ids: any){
-    const params = new HttpParams().set('ids', ids.toString());
+    let params = new HttpParams().set('ids', ids.toString());
     return this.http.delete<any>(`${this.apiUrl}/delete`, { params })
       .pipe(
         catchError(this.commonService.handleError)

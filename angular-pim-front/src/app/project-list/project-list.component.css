@@ -67,9 +67,9 @@ form.search-form input, form.search-form select{
 .number{
     text-align: right;
 }
-.delete img{
-    width: 30px;
-    height: 30px;
+.delete img, img.delete{
+    width: 1em;
+    height: 1em;
     cursor: pointer;
 }
 tbody > tr:last-child{
@@ -86,4 +86,8 @@ td.check-box input{
 .delete-many img {
     width: 18px;
     height: 18px;
+}
+#reset{
+    margin-top: 5px;
+    margin-left: 8px;
 }

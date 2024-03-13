@@ -29,6 +29,7 @@ public class CompanyGroupServiceImpl implements CompanyGroupService {
 
     @Override
     public List<Long> getAllGroups() {
+        // Group has no name property, temporally use its id as name,
         List<CompanyGroup> companyGroups = companyGroupRepository.findAll();
         List<Long> companyGroupsId = new ArrayList<>();
         for (CompanyGroup c: companyGroups){

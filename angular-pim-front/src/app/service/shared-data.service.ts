@@ -12,9 +12,11 @@ export class SharedDataService {
   private searchString: string =''
   private status: string =''
 
+  statusArr: string[] = ['New', 'Planned', 'In progess', 'Finished'];
+
   constructor() { }
 
-  setError(error: any) {
+  setError(error: string) {
     this.currentError = error;
   }
   getError(){

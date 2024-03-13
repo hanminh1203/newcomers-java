@@ -6,10 +6,7 @@ import java.util.Optional;
 import vn.elca.training.model.ProjectStatus;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.entity.Project;
-import vn.elca.training.model.exception.GroupNotFoundException;
-import vn.elca.training.model.exception.ProjectNotFoundException;
-import vn.elca.training.model.exception.StatusNotAvailableException;
-import vn.elca.training.model.exception.VisaNotExistException;
+import vn.elca.training.model.exception.*;
 
 import javax.transaction.Transactional;
 
@@ -18,8 +15,13 @@ import javax.transaction.Transactional;
  *
  */
 public interface ProjectService {
+    void deleteAllByIds(List<Long> ids) throws DeleteNotNewProjectException;
 
-    ProjectDto updateProject(long id, ProjectDto updateProject) throws ProjectNotFoundException, StatusNotAvailableException, GroupNotFoundException, VisaNotExistException;
+    ProjectDto deleteById(Long id) throws DeleteNotNewProjectException, ProjectNotFoundException;
+
+    ProjectDto createProject(ProjectDto inputProject) throws ProjectNumberAlreadyExistsException, StatusNotAvailableException, GroupNotFoundException, VisaNotExistException, EndDateB4StartDateException;
+
+    ProjectDto updateProject(Long id, ProjectDto updateProject) throws StatusNotAvailableException, GroupNotFoundException, VisaNotExistException, ProjectNotFoundException, EndDateB4StartDateException;
     List<ProjectDto> findAll();
     List<ProjectDto> search(String keyword, String status);
     Project findById(long id) throws ProjectNotFoundException;

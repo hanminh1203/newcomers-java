@@ -8,10 +8,13 @@ img{
     float: left;
     margin-left: 13em;
 }
-a, p {
+a, p, span {
     font-size: 26px;
     display: inline;
 }
 .message{
     margin-left: 3em;
+}
+p a.contact {
+    color: indianred;
 }

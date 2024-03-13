@@ -5,14 +5,19 @@
                 <img src="./assets/logo_elca.png" alt="">
             </div>
             <div class="col-sm-9">
-                <h2>Project Information Management</h2>
+                <h2>{{'header.pim' | translate}}</h2>
             </div>
         </div>
         <div class="col-sm-2"></div>
         <div class="col-sm-4 row">
-            <div class="col-sm-6">Multilingual</div>
-            <a class="col-sm-2" href="#">Help</a>
-            <a class="col-sm-3" href="#">Log out</a>
+            <div class="col-sm-6">
+                <div class="lang-picker">
+                    <a [class.selectedLang]="selectedLang==='en'" (click)="useLanguage('en')">EN</a> <span>|</span>
+                    <a [class.selectedLang]="selectedLang==='fr'" (click)="useLanguage('fr')">FR</a>
+                </div>
+            </div>
+            <a class="col-sm-2" href="#">{{'header.help' | translate}}</a>
+            <a  class="col-sm-3 disable" href="#">{{'header.logout' | translate}}</a>
         </div>
     </div>
 

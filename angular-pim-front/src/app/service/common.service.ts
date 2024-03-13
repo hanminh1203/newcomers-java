@@ -4,6 +4,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { ErrorResponse } from '../ErrorResponse';
 import { SharedDataService } from './shared-data.service';
 import { Router } from '@angular/router';
+import { NewProjectFormComponent } from '../new-project-form/new-project-form.component';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +21,9 @@ export class CommonService {
     return throwError(() => new ErrorResponse(error.status, error.error.message, error.error.detail));
   }
 
-  public redirectOnError(error: ErrorResponse){
-    this.sharedDataService.setError(error.detail);
-    this.router.navigateByUrl('/404');
+  public redirectOnError(errorMessage: string){
+    this.sharedDataService.setError(errorMessage);
+    this.router.navigateByUrl('/error');
   }
-  
   
 }

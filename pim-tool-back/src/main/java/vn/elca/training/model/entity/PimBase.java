@@ -8,10 +8,11 @@ public class PimBase implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(length = 19)
     private Long id;
 
     @Version
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private long version;
 
     public Long getId() {

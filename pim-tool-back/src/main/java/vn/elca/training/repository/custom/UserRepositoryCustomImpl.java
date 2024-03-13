@@ -2,6 +2,7 @@ package vn.elca.training.repository.custom;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import vn.elca.training.model.entity.Employee;
+import vn.elca.training.model.entity.QCompanyGroup;
 import vn.elca.training.model.entity.QEmployee;
 
 import javax.persistence.EntityManager;

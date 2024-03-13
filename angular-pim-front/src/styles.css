@@ -22,8 +22,12 @@ button {
  
 button[type=submit]{
     background-color: #2f85fa;
+    
+}
+button[type=submit], button >p {
     color: aliceblue;
 }
+
 a{
     cursor: pointer;
 }

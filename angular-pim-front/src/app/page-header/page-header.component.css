@@ -8,3 +8,14 @@ h2 {
     font-weight: bolder;
     font-size:large;
 }
+.lang-picker{
+    display: flex;
+    flex-direction: row;
+}
+a.disabled {
+    pointer-events: none;
+    color: gray;
+  }
+.lang-picker a.selectedLang{
+    color: gray;
+}

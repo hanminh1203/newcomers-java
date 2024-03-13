@@ -13,25 +13,24 @@ import java.util.Set;
  *
  */
 @Entity
-public class Employee extends PimBase{
+public class  Employee extends PimBase{
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 3)
     private String visa;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String lastName;
 
     @Column(nullable = false)
     private LocalDate birthDate;
 
-    @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "members")
     @JsonIgnore
     private Set<Project> projects = new HashSet<>();
 
-
-    @OneToOne(mappedBy = "groupLeader", cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "groupLeader")
     @JsonIgnore
     private CompanyGroup companyGroup;
 
@@ -70,15 +69,6 @@ public class Employee extends PimBase{
     public void setProjects(Set<Project> projects) {
         this.projects = projects;
     }
-
-    public CompanyGroup getCompanyGroup() {
-        return companyGroup;
-    }
-
-    public void setCompanyGroup(CompanyGroup companyGroup) {
-        this.companyGroup = companyGroup;
-    }
-
 
     public String getVisa() {
         return visa;

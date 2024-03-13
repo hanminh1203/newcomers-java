@@ -1,5 +1,10 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
+import {TranslateService} from "@ngx-translate/core";
 
+interface Locale {
+  localeCode: string;
+  label: string;
+}
 @Component({
   selector: 'app-page-header',
   templateUrl: './page-header.component.html',
@@ -7,4 +12,15 @@ import { Component } from '@angular/core';
 })
 export class PageHeaderComponent {
 
+  selectedLang = "en";
+
+  constructor(private translate: TranslateService) {
+    translate.setDefaultLang('en');
+    translate.use('en');
+  }
+ 
+  useLanguage(language: string): void {
+    this.translate.use(language);
+    this.selectedLang=language;
+}
 }

@@ -1,17 +1,16 @@
 package vn.elca.training.repository.custom;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import vn.elca.training.model.ProjectStatus;
 import vn.elca.training.model.entity.Project;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProjectRepositoryCustom {
-    List<Project> findAll();
-    List<Project> findProjectByKeyword(String keyword);
-    List<Project> findProjectByStatus(Enum<ProjectStatus> status);
-    List<Project> findProjectByKeywordAndStatus(String keyword, Enum<ProjectStatus> status);
+    Project findProjectById(long id);
 
     long countByNumber(int projectNumber);
 
-    void deleteAllByIds(List<Long> ids);
+    List<Project> findAllByIds(List<Long> ids);
 }

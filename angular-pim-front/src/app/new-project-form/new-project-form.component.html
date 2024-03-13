@@ -1,40 +1,41 @@
 <div class="col-sm-10">
-    <h3 *ngIf="!project">New Project</h3>
-    <h3 *ngIf="project">Edit Project information</h3>
+    <h3 *ngIf="!isProjectExist">{{'form.new' | translate}}</h3>
+    <h3 *ngIf="isProjectExist">{{'form.edit' | translate}}</h3>
             <form [formGroup]="projectForm" (ngSubmit)="Submit()">
                 <div class="project-form">
                     <div [hidden]="projectForm.valid" class="alert alert-danger">
-                        Please enter all the mandatory fields (*)
+                        {{'form.alert' | translate}}
                     </div>
                     <div class="row">
                         <div class="col-sm-3">
-                            <label class="require" for="project-number" >Project number</label>
+                            <label class="require" for="project-number" >{{'form.number' | translate}}</label>
                             </div>
                         <div class="col-sm-3">
-                            <input type="number" class="form-control" [class.ng-invalid]="existProjectNumberError" formControlName="projectNumber" [attr.disabled]="isProjectExist" >
+                            <input type="number" class="form-control" [class.ng-invalid]="existProjectNumberError" formControlName="projectNumber" [attr.disabled]="isProjectExist"
+                            pInputText pAutoFocus [autofocus]="!isProjectExist" >
                         </div>
-                        <div *ngIf="existProjectNumberError" class="col-sm-6 error">The project number already existed. Please select a different project number</div>
+                        <div *ngIf="existProjectNumberError" class="col-sm-6 error">{{'form.numberExistAlert' | translate}}</div>
                     </div>
                     <div class="row">
                         <div class="col-sm-3">
-                            <label class="require">Project name </label>
+                            <label class="require">{{'form.name' | translate}}</label>
                         </div>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" formControlName="projectName">
+                            <input type="text" class="form-control" formControlName="projectName" pInputText pAutoFocus [autofocus]="isProjectExist" maxlength="50">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-sm-3">
-                            <label class="require">Customer </label>
+                            <label class="require">{{'form.customer' | translate}} </label>
                         </div>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" formControlName="projectCustomer">
+                            <input type="text" class="form-control" formControlName="projectCustomer" maxlength="50">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-3">
-                            <label class="require">Group </label>
+                            <label class="require">{{'form.group' | translate}} </label>
                         </div>
                         <div class=" col-sm-3">
                             <select class="form-control" formControlName="projectGroup">
@@ -44,33 +45,33 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-3">
-                            <label>Member </label>
+                            <label>{{'form.member' | translate}} </label>
                         </div>
                         <div class="col-sm-9" >
                             <input type="text" class="form-control" formControlName="projectMember">
-                            <div *ngIf="unavailableVisasArr" class="error visaError" >The following visas do not exist: {{unavailableVisasArr}}</div>
+                            <div *ngIf="unavailableVisasArr" class="error visaError">{{'form.alertVisaNotExist' | translate}} {{unavailableVisasArr}}</div>
                         </div>  
                     </div>
 
                     <div class="row">
                         <div class="col-sm-3">
-                            <label class="require">Status </label>
+                            <label class="require">{{'form.status' | translate}}</label>
                         </div>
                         <div class=" col-sm-3">
                             <select class="form-control" formControlName="projectStatus">
-                                <option *ngFor="let s of status" [value]="s" >{{ s }}</option>
+                                <option *ngFor="let s of this.sharedDataService.statusArr" [value]="s" >{{ s }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="date row">
                         <div class="col-sm-3">
-                        <label class="require">Start date</label> 
+                        <label class="require">{{'form.startDate' | translate}}</label> 
                     </div>
                     <div class="col-sm-3">
                         <input type="date" class="form-control" formControlName="projectStartDate">
                     </div>
                     <div class="col-sm-3 end-date">
-                        <label for="end-date">End date</label>
+                        <label for="end-date">{{'form.endDate' | translate}}</label>
                     </div>
                     <div class="col-sm-3">
                         <input type="date" name="end-date" class="form-control" formControlName="projectEndDate">
@@ -81,11 +82,11 @@
                         <div class="col-sm-5"> 
                         </div>
                         <div class="col-sm-3 btn cancel-button">
-                            <button class="form-control" type="button">Cancel</button>
+                            <button (click)="cancel()" class="form-control" type="button">{{'form.cancelButton' | translate}}</button>
                         </div>
                         <div class="col-sm-1"></div>
                             <div class="col-sm-3 btn">
-                                <button class="form-control" type="submit"><p *ngIf="!project">Create project</p><p *ngIf="project">Edit project</p></button>
+                                <button class="form-control" type="submit"><p *ngIf="!isProjectExist">{{'form.create' | translate}}</p><p *ngIf="isProjectExist">{{'form.editButton' | translate}}</p></button>
                             </div>
         </div>
     </form>

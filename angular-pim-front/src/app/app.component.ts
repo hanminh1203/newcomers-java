@@ -1,7 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NewProjectFormComponent } from './new-project-form/new-project-form.component';
-import { ProjectService } from './service/project.service';
-import { SharedDataService } from './service/shared-data.service';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-root',
@@ -9,6 +7,8 @@ import { SharedDataService } from './service/shared-data.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'angular-pim-front';
-
+  constructor(private translate: TranslateService) {
+    translate.setDefaultLang('en');
+    translate.use('en');
+  }
 }

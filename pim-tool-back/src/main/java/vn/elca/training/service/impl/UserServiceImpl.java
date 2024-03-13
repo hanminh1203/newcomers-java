@@ -39,16 +39,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean checkIfVisasNotExist(Set<String> inputVisas) throws VisaNotExistException {
+        // get all employee visas from database
         List<String> visaFromDbList = this.getEmployeeVisa();
         visaFromDbList.replaceAll(String::trim);
-
-        List<String> filerVisaList = inputVisas.stream()
+        // filter input visas through database visas
+        List<String> filterVisaList = inputVisas.stream()
                 .map(String::trim)
                 .filter(visa -> !visaFromDbList.contains(visa))
                 .collect(Collectors.toList());
-        if(filerVisaList.isEmpty())
+        if(filterVisaList.isEmpty())
             return true;
         else
-            throw new VisaNotExistException(filerVisaList);
+            // if there's any visa that have not been filtered, means it not a available visa
+            throw new VisaNotExistException(filterVisaList);
     }
 }

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200"})
 @RequestMapping("/projects")
 public class ProjectController extends AbstractApplicationController {
 
@@ -57,7 +57,7 @@ public class ProjectController extends AbstractApplicationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProjectDto> searchById(@PathVariable long id) throws ProjectNotFoundException {
+    public ResponseEntity<ProjectDto> searchById(@PathVariable long id) throws ProjectNotFoundException, StatusNotAvailableException {
         Project project = projectService.findById(id);
         ProjectDto projectDto = mapper.projectToProjectDto(project);
         return new ResponseEntity<>(projectDto, HttpStatus.OK);
@@ -65,36 +65,26 @@ public class ProjectController extends AbstractApplicationController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProjectDto> updateProject(@PathVariable long id, @RequestBody ProjectDto inputProjectDto) throws ProjectNotFoundException, StatusNotAvailableException, GroupNotFoundException, VisaNotExistException {
+    public ResponseEntity<ProjectDto> updateProject(@PathVariable long id, @RequestBody ProjectDto inputProjectDto) throws ProjectNotFoundException, StatusNotAvailableException, GroupNotFoundException, VisaNotExistException, EndDateB4StartDateException {
         ProjectDto updatedProjectDto = projectService.updateProject(id, inputProjectDto);
         return new ResponseEntity(updatedProjectDto, HttpStatus.OK);
     }
 
     @PostMapping("")
-    public ResponseEntity<ProjectDto> CreateNewProject(@RequestBody ProjectDto inputProjectDto) throws ProjectNumberAlreadyExistsException, StatusNotAvailableException, GroupNotFoundException, VisaNotExistException {
-        int projectNumber = inputProjectDto.getProjectNumber();
-        if(projectRepository.countByNumber(projectNumber)>0){
-            throw new ProjectNumberAlreadyExistsException(projectNumber);
-        }
-        else {
-            Project saveProject = new Project();
-             saveProject = projectRepository.save(mapper.projectDtoToProject(saveProject, inputProjectDto));
-             ProjectDto savedProjectDto = mapper.projectToProjectDto(saveProject);
-            return new ResponseEntity(savedProjectDto , HttpStatus.OK);
-        }
+    public ResponseEntity<ProjectDto> CreateNewProject(@RequestBody ProjectDto inputProjectDto) throws ProjectNumberAlreadyExistsException, StatusNotAvailableException, GroupNotFoundException, VisaNotExistException, EndDateB4StartDateException {
+        ProjectDto savedProjectDto = projectService.createProject(inputProjectDto);
+        return new ResponseEntity(savedProjectDto , HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ProjectDto> deleteProject(@PathVariable long id) throws ProjectNotFoundException {
-        Project project = projectService.findById(id);
-        ProjectDto projectDto = mapper.projectToProjectDto(project);
-        projectRepository.delete(project);
+    public ResponseEntity<ProjectDto> deleteProject(@PathVariable long id) throws ProjectNotFoundException, DeleteNotNewProjectException {
+        ProjectDto projectDto = projectService.deleteById(id);
         return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteProjects(@RequestParam("ids") List<Long> projectIds){
-        projectRepository.deleteAllByIds(projectIds);
+    public ResponseEntity<String> deleteProjects(@RequestParam("ids") List<Long> projectIds) throws DeleteNotNewProjectException {
+        projectService.deleteAllByIds(projectIds);
         return new ResponseEntity<>("Delete project with id:"+ projectIds.toString(), HttpStatus.OK);
     }
 }

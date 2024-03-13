@@ -22,7 +22,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         ErrorResponse errorResponse = new ErrorResponse("database error", ex.getMessage());
         return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
-    @ExceptionHandler(value = {GroupNotFoundException.class, ProjectNotFoundException.class})
+    @ExceptionHandler(value = {ProjectNotFoundException.class, GroupNotFoundException.class})
     protected ResponseEntity<Object> objectNotFoundHandle(Exception ex, WebRequest request){
         ErrorResponse errorResponse = new ErrorResponse("object not found", ex.getMessage());
         return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
@@ -48,10 +48,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-//    @ExceptionHandler(ApplicationUnexpectedException.class)
-//    protected ResponseEntity<Object> applicationUnexpectedHandle(RuntimeException ex, WebRequest request) {
-//        String bodyResponse = ex.getMessage();
-//        return handleExceptionInternal(ex, bodyResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
-//    }
+    @ExceptionHandler(DeleteNotNewProjectException.class)
+    protected ResponseEntity<Object> deleteNotNewProjectHandle(DeleteNotNewProjectException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse("can not delete item(s)", ex.getMessage());
+        return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request);
+    }
 
 }

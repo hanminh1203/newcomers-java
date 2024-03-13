@@ -1,6 +1,7 @@
 package vn.elca.training.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import vn.elca.training.model.ProjectStatus;
 
 import javax.persistence.*;
@@ -15,11 +16,11 @@ import java.util.Set;
 @Entity
 public class Project extends PimBase {
     @JoinColumn(nullable = false, name = "group_id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private CompanyGroup companyGroup;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 4)
     private int projectNumber;
 
     @Column(nullable = false, length = 50)
@@ -28,7 +29,7 @@ public class Project extends PimBase {
     private String customer;
 
 
-    @Column(name = "status", nullable = true) //TODO: nullable = false
+    @Column(name = "status", nullable = false)
     private Enum<ProjectStatus> projectStatus;
 
     @Column(nullable = false)
@@ -37,7 +38,7 @@ public class Project extends PimBase {
     @Column
     private LocalDate endDate;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "project_employee",
             joinColumns = @JoinColumn(name = "project_id"),
@@ -74,7 +75,7 @@ public class Project extends PimBase {
         this.customer = customer;
     }
 
-    public Set<String> getMemberVisa(){
+    public Set<String>  getMemberVisa(){
         Set<String> membersVisa = new HashSet<>();
         for (Employee member: this.members ){
             membersVisa.add(member.getVisa());

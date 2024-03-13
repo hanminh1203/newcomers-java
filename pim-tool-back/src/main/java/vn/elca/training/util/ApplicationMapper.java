@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.elca.training.model.ProjectStatus;
 import vn.elca.training.model.dto.*;
 import vn.elca.training.model.entity.Project;
+import vn.elca.training.model.exception.EndDateB4StartDateException;
 import vn.elca.training.model.exception.GroupNotFoundException;
 import vn.elca.training.model.exception.StatusNotAvailableException;
 import vn.elca.training.model.exception.VisaNotExistException;
@@ -40,17 +41,15 @@ public class  ApplicationMapper {
     @Autowired
     CompanyGroupRepository companyGroupRepository;
 
-    public ProjectDto projectToProjectDto(Project entity){
+    public ProjectDto projectToProjectDto(Project entity) {
         ProjectDto dto = new ProjectDto();
         dto.setId(entity.getId());
         dto.setProjectNumber(entity.getProjectNumber());
         dto.setName(entity.getName());
         dto.setGroupId(entity.getCompanyGroup().getId());
         dto.setCustomer(entity.getCustomer());
-        dto.setMemberVisa(entity.getMemberVisa().stream()
-                .reduce((s1, s2) -> s1 + "," + s2)
-                .orElse(""));
-        dto.setStatus(String.valueOf(entity.getProjectStatus()));
+        dto.setMemberVisaFromInner(entity.getMemberVisa()); // setMemberVisaFromInner() transfer Set<String> visas to a String visas
+        dto.setStatusFromInner(entity.getProjectStatus()); // setStatusFromInner() transfer enum status to String status
         dto.setEndDate(entity.getEndDate());
         dto.setStartDate(entity.getStartDate());
         return dto;
@@ -61,12 +60,13 @@ public class  ApplicationMapper {
         project.setName(dto.getName());
         project.setCustomer(dto.getCustomer());
         project.setCompanyGroup(companyGroupService.findById(dto.getGroupId()));
+        // input visa can have value "" and after transfer into a set, it can contain one "" element
         if(!(setInputVisa.size() == 1 && setInputVisa.contains(""))) {
-            if (userService.checkIfVisasNotExist(setInputVisa)) {
+            if (userService.checkIfVisasNotExist(setInputVisa)) { // check if visas valid before setting them to project
                 project.setMembers(userRepository.findMembersByVisa(setInputVisa));
             }
         }
-        project.setProjectStatus(this.stringStatustoEnumStatus(dto.getStatus()));
+        project.setProjectStatus(this.stringStatustoEnumStatus(dto.getStatus())); // transfer String status to enum b4 set to project
         project.setStartDate(dto.getStartDate());
         project.setEndDate(dto.getEndDate());
         return project;
@@ -74,23 +74,24 @@ public class  ApplicationMapper {
 
     public Set<String> stringVisasToSetVisas(String visas){
         String[] visa = visas.split(",");
-        Set<String> setVisas = Arrays.stream(visa)
+        return Arrays.stream(visa)
                 .map(String::trim)
                 .collect(Collectors.toSet());
-        return setVisas;
     }
 
     public Enum<ProjectStatus> stringStatustoEnumStatus(String status) throws StatusNotAvailableException {
-        switch (status){
-            case "PLA":
-                return ProjectStatus.PLA;
-            case "NEW":
-                return ProjectStatus.NEW;
-            case "FIN":
-                return ProjectStatus.FIN;
-            case "INP":
-                return ProjectStatus.INP;
-            default: throw new StatusNotAvailableException(status);
+        if(status.equals("Planned")){
+            return ProjectStatus.PLA;
         }
-    }
+        else if(status.equals("In progess")){
+            return ProjectStatus.INP;
+        }
+        else if(status.equals("New")){
+            return ProjectStatus.NEW;
+        }
+        else if(status.equals("Finished")){
+            return ProjectStatus.FIN;
+        }
+        else throw new StatusNotAvailableException(status);
+        }
 }

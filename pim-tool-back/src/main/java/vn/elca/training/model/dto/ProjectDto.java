@@ -1,7 +1,10 @@
 package vn.elca.training.model.dto;
 import vn.elca.training.model.ProjectStatus;
+import vn.elca.training.model.exception.StatusNotAvailableException;
+
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author gtn
@@ -64,8 +67,9 @@ public class ProjectDto {
         return membersVisa;
     }
 
-    public void setMemberVisa(String membersVisa) {
-        this.membersVisa = membersVisa;
+    public void setMemberVisaFromInner(Set<String> membersVisa) {
+        this. membersVisa = membersVisa.stream()
+                .collect(Collectors.joining(", "));
     }
 
     public String getStatus() {
@@ -76,6 +80,17 @@ public class ProjectDto {
         this.status = status;
     }
 
+    public void setStatusFromInner(Enum<ProjectStatus> status) {
+        if (status.equals(ProjectStatus.PLA)) {
+            this.status = "Planned";
+        } else if (status.equals(ProjectStatus.NEW)) {
+            this.status = "New";
+        } else if (status.equals(ProjectStatus.FIN)) {
+            this.status = "Finished";
+        } else if (status.equals(ProjectStatus.INP)) {
+            this.status = "In progess";
+        }
+    }
     public LocalDate getStartDate() {
         return startDate;
     }

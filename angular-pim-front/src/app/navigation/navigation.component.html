@@ -1,7 +1,11 @@
 <div class="nav">
-    <a routerLink="/projects">Project list</a>
-    <a routerLink="/projects/new">New</a>
-    <a href="#">Project</a>
-    <a href="#">Customer</a>
-    <a href="#">Supplier</a>
+    <div class="nav1">
+        <a routerLink="/projects" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">{{'nav.projectList' | translate}}</a>
+        <p>{{'nav.new' | translate}}</p>
+    </div>
+    <div class="nav2">
+        <a a routerLink="/projects/new" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">{{'nav.project' | translate}}</a>
+        <p >{{'nav.Customer' | translate}}</p>
+        <p >{{'nav.Supplier' | translate}}</p>
+    </div>
 </div>

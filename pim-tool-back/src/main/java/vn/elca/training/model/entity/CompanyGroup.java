@@ -8,11 +8,11 @@ import java.util.Set;
 @Table(name = "company_group")
 public class CompanyGroup extends PimBase{
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_leader_id", nullable = false)
     private Employee groupLeader;
 
-    @OneToMany( mappedBy = "companyGroup", cascade = CascadeType.PERSIST)
+    @OneToMany( mappedBy = "companyGroup", fetch = FetchType.LAZY)
     private Set<Project> projects = new HashSet<>();
 
 
@@ -30,16 +30,6 @@ public class CompanyGroup extends PimBase{
 
     public Set<Project> getProjects() {
         return projects;
-    }
-
-    public void setProjects(Set<Project> projects) {
-        this.projects = projects;
-    }
-    public void addProject(Project project){
-        this.projects.add(project);
-    }
-    public void removeProject(Project project){
-        this.projects.remove(project);
     }
 
 

@@ -1,4 +1,5 @@
 @import url('https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css');
+
 *{
     font-size: 14px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -8,10 +9,31 @@
 .ng-invalid:not(form) {
     border-color: red;
   }
+.ng-input > input{
+    margin-bottom: 0px !important;
+    height: 23px;
+}
+ng-select.ng-select-multiple{
+    margin-bottom: 38px;
+}
+div.ng-option-selected{
+    background-color: #fff !important;
+}
+div.ng-value{
+    background-color: #e0e3e5 !important;
+}
 
-input, select {
+span.ng-value-icon.right{
+    border: 0px !important;
+}
+.ng-arrow-wrapper {
+    display: none !important;
+}
+
+input, select, .dropdown {
     margin-bottom: 38px;
     height: 30px;
+    
 }
 button {
     width: 100%;

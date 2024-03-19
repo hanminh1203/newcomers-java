@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Project } from '../project';
 import { CommonService } from './common.service';
+import { Employee } from '../employee';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +64,5 @@ export class ProjectService {
         catchError(this.commonService.handleError)
       );
   
-    
   }
 }

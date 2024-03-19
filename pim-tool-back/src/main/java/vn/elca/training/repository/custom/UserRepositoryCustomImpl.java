@@ -20,4 +20,12 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
                 .where(QEmployee.employee.visa.in(visas))
                 .fetch();
     }
+
+    @Override
+    public List<Employee> findByIds(List<Long> ids){
+        return new JPAQuery<Employee>(em)
+                .from(QEmployee.employee)
+                .where(QEmployee.employee.id.in(ids))
+                .fetch();
+    }
 }

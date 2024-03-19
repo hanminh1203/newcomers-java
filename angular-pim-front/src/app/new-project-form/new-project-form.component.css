@@ -33,3 +33,17 @@ div .visaError{
 .error {
     color: red;
 }
+
+div.selectedMember{
+    background-color: #eae1e1;
+    border: black solid 1px;
+    width: max-content;
+    padding: 0 10px 0;
+    margin: 5px;
+}
+.selectedMembers{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    top: 20px;
+}

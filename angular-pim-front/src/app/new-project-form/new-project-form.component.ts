@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, NgModule, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../service/project.service';
@@ -10,6 +10,9 @@ import { SharedDataService } from '../service/shared-data.service';
 import {Location} from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { EmployeeService } from '../service/employee.service';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { Employee } from '../employee';
 
 
 @Component({
@@ -17,13 +20,20 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './new-project-form.component.html',
   styleUrl: './new-project-form.component.css'
 })
+
 export class NewProjectFormComponent implements OnInit {
   constructor( private location: Location, private route: ActivatedRoute, private router: Router, private projectService: ProjectService, 
-    private groupService: GroupService, public sharedDataService: SharedDataService, 
+    private groupService: GroupService, public sharedDataService: SharedDataService, private employeeService: EmployeeService,
     private commonService: CommonService, private titleService:Title, private translate: TranslateService){}
 
   project?: Project;
   projectId? :number;
+
+  dropdownList?: any;
+  allEmployee: any[] = [];
+  searchText ="";
+  filterEmployees?: Employee[] = [];
+
 
   group: string[] = ['New'];
 
@@ -38,7 +48,7 @@ export class NewProjectFormComponent implements OnInit {
     projectName: new FormControl('', Validators.required),
     projectCustomer: new FormControl('', Validators.required),
     projectGroup: new FormControl(this.group[0], Validators.required),
-    projectMember: new FormControl(''),
+    projectMember: new FormControl(<Employee[]> []),
     projectStatus: new FormControl(this.sharedDataService.statusArr[0], Validators.required),
     projectStartDate: new FormControl('', Validators.required),
     projectEndDate: new FormControl(''),
@@ -65,9 +75,20 @@ export class NewProjectFormComponent implements OnInit {
     // always run code, get all the group id for form selection option
     this.groupService.getGroupIds().subscribe(data => 
       data.forEach(id => this.group.push(id)));
+    
+    this.employeeService.getEmployees().subscribe(data => {
+      this.allEmployee = data;
+    });
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
 
-      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   };
+  search(){
+    if(this.searchText == ""){
+      this.filterEmployees = [];
+      return;
+    }
+    this.filterEmployees = this.allEmployee.filter(item => item.name.includes(this.searchText))
+  }
   
   
   getProject(projectId: number){
@@ -82,7 +103,7 @@ export class NewProjectFormComponent implements OnInit {
           projectName: this.project.name,
           projectCustomer: this.project.customer,
           projectGroup: this.project.groupId,
-          projectMember: this.project.membersVisa,
+          projectMember: this.project.members,
           projectStatus: this.project.status,
           projectStartDate: this.project.startDate,
           projectEndDate: this.project.endDate,
@@ -95,7 +116,7 @@ export class NewProjectFormComponent implements OnInit {
     );
   }
 
-  Submit(){
+  Submit(){ 
     // on submission contruct a project instance first
     this.project = new Project(this.projectForm.controls.projectNumber.value, this.projectForm.controls.projectName.value, 
       this.projectForm.controls.projectCustomer.value, this.projectForm.controls.projectGroup.value, 
@@ -147,4 +168,5 @@ export class NewProjectFormComponent implements OnInit {
   cancel(){
     this.router.navigateByUrl('/projects');
   }
+
 }

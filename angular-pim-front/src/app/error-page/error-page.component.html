@@ -1,0 +1,9 @@
+<div class="error-page">
+    <img src="./assets/failed.jpg" alt="">
+    <p class="message">{{'errorpage.message' | translate}} [<span *ngIf="objectNotFound">{{'error.objectNotFound'| translate}}</span>
+        <span *ngIf="clientErr">{{'error.clientSideErr'| translate}}</span>
+        <span *ngIf="notAnId">{{'error.notAnId'| translate}}</span>
+        <span *ngIf="dateConflict">{{'error.dateConflict'| translate}}</span>]<br>
+        {{'errorpage.please' | translate}} <a routerLink="#" class="contact">{{'errorpage.contact' | translate}}</a><br>
+        {{'errorpage.or' | translate}} <a routerLink="/projects">{{'errorpage.back' | translate}}</a></p>
+</div>

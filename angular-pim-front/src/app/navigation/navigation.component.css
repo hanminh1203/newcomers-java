@@ -1,0 +1,19 @@
+a {
+    display: block;
+}
+.nav1 a.active-link, .nav2 a.active-link{
+    font-weight: 600;
+    color: #333333;
+}
+.nav1 a, .nav1 p{
+    font-size: 18px;
+    color: #2F85FA;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+.nav2 a, .nav2 p {
+    font-weight: 400;
+    color: #666666;
+    margin-top: 10px;
+}
+

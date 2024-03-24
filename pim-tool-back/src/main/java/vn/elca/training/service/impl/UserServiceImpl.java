@@ -4,13 +4,16 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vn.elca.training.model.entity.Task;
-import vn.elca.training.model.entity.User;
-import vn.elca.training.repository.TaskRepository;
+import vn.elca.training.model.entity.Employee;
+import vn.elca.training.model.exception.VisaNotExistException;
 import vn.elca.training.repository.UserRepository;
 import vn.elca.training.service.UserService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author gtn
@@ -22,36 +25,32 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    TaskRepository taskRepository;
+
 
     @Override
-    public User findOne(Long id) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user != null) {
-            Hibernate.initialize(user.getTasks());
+    public List<String> getEmployeeVisa() {
+        List<Employee> employees = userRepository.findAll();
+        List<String> allEmployeeVisas = new ArrayList<>();
+        for (Employee employee: employees){
+            allEmployeeVisas.add(employee.getVisa());
         }
-        // Should throw exception if not found
-
-        return user;
+        return allEmployeeVisas;
     }
 
     @Override
-    public User findOne(String usename) {
-        return userRepository.findUserByUsername(usename);
-    }
-
-    @Override
-    public User addTasksToUser(List<Long> taskIds, String username) {
-        List<Task> tasks = taskRepository.findAllById(taskIds);
-        User user = findOne(username);
-        user.setTasks(tasks);
-
-        return user;
-    }
-
-    @Override
-    public User update(User user) {
-        return userRepository.save(user);
+    public boolean checkIfVisasNotExist(Set<String> inputVisas) throws VisaNotExistException {
+        // get all employee visas from database
+        List<String> visaFromDbList = this.getEmployeeVisa();
+        visaFromDbList.replaceAll(String::trim);
+        // filter input visas through database visas
+        List<String> filterVisaList = inputVisas.stream()
+                .map(String::trim)
+                .filter(visa -> !visaFromDbList.contains(visa))
+                .collect(Collectors.toList());
+        if(filterVisaList.isEmpty())
+            return true;
+        else
+            // if there's any visa that have not been filtered, means it not a available visa
+            throw new VisaNotExistException(filterVisaList);
     }
 }

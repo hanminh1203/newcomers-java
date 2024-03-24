@@ -1,57 +1,53 @@
 package vn.elca.training.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import vn.elca.training.model.ProjectStatus;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * @author vlp
  */
 @Entity
-public class Project {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Project extends PimBase {
+    @JoinColumn(nullable = false, name = "group_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private CompanyGroup companyGroup;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true, length = 4)
+    private int projectNumber;
+
+    @Column(nullable = false, length = 50)
     private String name;
-
-    @Column
-    private LocalDate finishingDate;
-
-    @Column
+    @Column(nullable = false, length = 50)
     private String customer;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private Set<Task> tasks = new HashSet<>();
+
+    @Column(name = "status", nullable = false)
+    private Enum<ProjectStatus> projectStatus;
+
+    @Column(nullable = false)
+    private LocalDate startDate;
+
+    @Column
+    private LocalDate endDate;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "project_employee",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id", nullable = false)
+    )
+    private Set<Employee> members = new HashSet<>();
+
 
     public Project() {
-    }
-
-    public Project(String name, LocalDate finishingDate) {
-        this.name = name;
-        this.finishingDate = finishingDate;
-    }
-
-    public Project(Long id, String name, LocalDate finishingDate) {
-        this.id = id;
-        this.name = name;
-        this.finishingDate = finishingDate;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -62,13 +58,14 @@ public class Project {
         this.name = name;
     }
 
-    public LocalDate getFinishingDate() {
-        return finishingDate;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setFinishingDate(LocalDate finishingDate) {
-        this.finishingDate = finishingDate;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
+
 
     public String getCustomer() {
         return customer;
@@ -78,11 +75,49 @@ public class Project {
         this.customer = customer;
     }
 
-    public Set<Task> getTasks() {
-        return tasks;
+    public Set<String>  getMemberVisa(){
+        Set<String> membersVisa = new HashSet<>();
+        for (Employee member: this.members ){
+            membersVisa.add(member.getVisa());
+        }
+        return membersVisa;
     }
 
-    public void setTasks(Set<Task> tasks) {
-        this.tasks = tasks;
+    public CompanyGroup getCompanyGroup() {
+        return companyGroup;
     }
+
+    public void setCompanyGroup(CompanyGroup companyGroup) {
+        this.companyGroup = companyGroup;
+    }
+
+    public Enum<ProjectStatus> getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(Enum<ProjectStatus> projectStatus) {
+        this.projectStatus = projectStatus;
+    }
+
+
+    public void setMembers(List<Employee> members) {
+        this.members = new HashSet<>(members);
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public int getProjectNumber() {
+        return projectNumber;
+    }
+
+    public void setProjectNumber(int projectNumber) {
+        this.projectNumber = projectNumber;
+    }
+
 }

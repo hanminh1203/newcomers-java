@@ -1,0 +1,94 @@
+<div class="col-sm-10">
+    <h3 *ngIf="!isProjectExist">{{'form.new' | translate}}</h3>
+    <h3 *ngIf="isProjectExist">{{'form.edit' | translate}}</h3>
+            <form [formGroup]="projectForm" (ngSubmit)="Submit()">
+                <div class="project-form">
+                    <div [hidden]="projectForm.valid" class="alert alert-danger">
+                        {{'form.alert' | translate}}
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="require" for="project-number" >{{'form.number' | translate}}</label>
+                            </div>
+                        <div class="col-sm-3">
+                            <input type="number" class="form-control" [class.ng-invalid]="existProjectNumberError" formControlName="projectNumber" [attr.disabled]="isProjectExist"
+                            pInputText pAutoFocus [autofocus]="!isProjectExist" >
+                        </div>
+                        <div *ngIf="existProjectNumberError" class="col-sm-6 error">{{'form.numberExistAlert' | translate}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="require">{{'form.name' | translate}}</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" formControlName="projectName" pInputText pAutoFocus [autofocus]="isProjectExist" maxlength="50">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="require">{{'form.customer' | translate}} </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" formControlName="projectCustomer" maxlength="50">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="require">{{'form.group' | translate}} </label>
+                        </div>
+                        <div class=" col-sm-3">
+                            <select class="form-control" formControlName="projectGroup">
+                                <option *ngFor="let g of group" [value]="g">{{g}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>{{'form.member' | translate}} </label>
+                        </div>
+                        <div class="col-sm-9" >
+                            <input type="text" class="form-control" formControlName="projectMember">
+                            <div *ngIf="unavailableVisasArr" class="error visaError">{{'form.alertVisaNotExist' | translate}} {{unavailableVisasArr}}</div>
+                        </div>  
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="require">{{'form.status' | translate}}</label>
+                        </div>
+                        <div class=" col-sm-3">
+                            <select class="form-control" formControlName="projectStatus">
+                                <option *ngFor="let s of this.sharedDataService.statusArr" [value]="s" >{{ s }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="date row">
+                        <div class="col-sm-3">
+                        <label class="require">{{'form.startDate' | translate}}</label> 
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="date" class="form-control" formControlName="projectStartDate">
+                    </div>
+                    <div class="col-sm-3 end-date">
+                        <label for="end-date">{{'form.endDate' | translate}}</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="date" name="end-date" class="form-control" formControlName="projectEndDate">
+                    </div>
+                </div>
+                    </div>
+                    <div class="row button">
+                        <div class="col-sm-5"> 
+                        </div>
+                        <div class="col-sm-3 btn cancel-button">
+                            <button (click)="cancel()" class="form-control" type="button">{{'form.cancelButton' | translate}}</button>
+                        </div>
+                        <div class="col-sm-1"></div>
+                            <div class="col-sm-3 btn">
+                                <button class="form-control" type="submit"><p *ngIf="!isProjectExist">{{'form.create' | translate}}</p><p *ngIf="isProjectExist">{{'form.editButton' | translate}}</p></button>
+                            </div>
+        </div>
+    </form>
+</div>
+

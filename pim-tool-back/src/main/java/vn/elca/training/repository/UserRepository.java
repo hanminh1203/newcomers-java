@@ -4,14 +4,17 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
-import vn.elca.training.model.entity.User;
+import vn.elca.training.model.entity.Employee;
+import vn.elca.training.repository.custom.UserRepositoryCustom;
+
+import java.util.List;
 
 /**
  * @author gtn
  *
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredicateExecutor<User> {
-    @EntityGraph(attributePaths = {"tasks", "tasks.project"})
-    User findUserByUsername(String username);
+public interface UserRepository extends JpaRepository<Employee, Long>, QuerydslPredicateExecutor<Employee>, UserRepositoryCustom {
+    @EntityGraph(attributePaths = {"companyGroup"})
+    List<Employee> findAll();
 }

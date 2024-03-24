@@ -1,19 +1,18 @@
 package vn.elca.training.service;
 
-import vn.elca.training.model.entity.User;
+import vn.elca.training.model.entity.Employee;
+import vn.elca.training.model.exception.VisaNotExistException;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author gtn
  *
  */
 public interface UserService {
-    User findOne(Long id);
 
-    User findOne(String username);
+    List<String> getEmployeeVisa();
+    boolean checkIfVisasNotExist(Set<String> visas) throws VisaNotExistException;
 
-    User addTasksToUser(List<Long> taskIds, String username);
-
-    User update(User user);
 }

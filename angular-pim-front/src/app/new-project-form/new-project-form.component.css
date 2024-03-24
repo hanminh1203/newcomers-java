@@ -1,0 +1,35 @@
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+button .cancel-button{
+    background-color: #B9B9B9;
+    color: black; 
+}
+label {
+    margin-left: 2.5em;
+}
+.end-date{
+    align-self: flex-end;
+    padding-left: 3em;
+}
+div .project-form{
+    border-top: 0.5px solid black;
+    border-bottom: 0.5px solid black;
+    padding: 30px 0px 15px;
+    margin: 1em 0px 2em;
+    
+}
+.require::after{
+    content: ' *';
+    color: red;
+}
+div .visaError{
+    margin-top: -30px;
+    margin-bottom: 38px;
+    
+}
+.error {
+    color: red;
+}

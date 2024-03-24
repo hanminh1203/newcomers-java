@@ -1,0 +1,21 @@
+.page_header {
+    display: flex;
+    align-items: flex-end;
+    border-bottom: 0.1px solid black;
+    padding-bottom: 2em;
+}
+h2 {
+    font-weight: bolder;
+    font-size:large;
+}
+.lang-picker{
+    display: flex;
+    flex-direction: row;
+}
+a.disabled {
+    pointer-events: none;
+    color: gray;
+  }
+.lang-picker a.selectedLang{
+    color: gray;
+}

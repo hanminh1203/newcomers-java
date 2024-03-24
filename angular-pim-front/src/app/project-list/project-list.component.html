@@ -1,0 +1,45 @@
+<div class="project-list">
+  <h4>{{'nav.projectList' | translate}}</h4>
+  <form class="search-form" [formGroup]="searchForm" (ngSubmit)="search()">
+  <div class="row">
+    <input class="col-md-4" placeholder="{{'projectList.searchInput' | translate}}" formControlName="searchString" pInputText pAutoFocus [autofocus]="true">
+    <select class="col-md-2" formControlName="status">
+      <option value=""hidden>Project status</option>
+      <option *ngFor="let s of sharedDataService.statusArr" [value]="s" >{{ s }}</option>
+    </select>
+    <div class="col-md-1"></div>
+    <div class="col-md-4">
+    <button type="submit"class="col-md-6">{{'projectList.searchButton' | translate}}</button>
+    <a (click)="reset()" id="reset" class="col-md-4">{{'projectList.resetButton' | translate}}</a>
+    </div>
+  </div>
+</form>
+  <table>
+    <thead>
+      <tr>
+        <th class="check-box"></th>
+        <th class="project-number">{{'projectList.number' | translate}}</th>
+        <th class="name">{{'projectList.name' | translate}}</th>
+        <th class="status">{{'projectList.status' | translate}}</th>
+        <th class="customer">{{'projectList.customer' | translate}}</th>
+        <th class="start-date">{{'projectList.startDate' | translate}}</th>
+        <th class="delete">{{'projectList.delete' | translate}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let project of projectList | slice:0:300">
+        <td class="check-box"><input type="checkbox" [disabled]="project.status!==sharedDataService.statusArr[0]" [checked]="isSelected(project)" (change)="toggleSelection(project)"></td>
+        <td class="project-number number"><a [routerLink]="['/projects', project.id]">{{ project.projectNumber }}</a></td>
+        <td class="name">{{ project.name }}</td>
+        <td class="status">{{ project.status }}</td>
+        <td class="customer">{{ project.customer }}</td>
+        <td class="start-date">{{ project.startDate }}</td>
+        <td class="delete"><img src="./assets/delete-button.png" *ngIf="project.status ===sharedDataService.statusArr[0]" (click)="delete(project)"></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="delete-many" *ngIf="selectedProjects[0]">
+    <p>{{selectedProjects.length}} {{'projectList.itemSelected' | translate}}</p>
+    <p (click)="deleteAll()">{{'projectList.deleteMany' | translate}}<img class="delete" src="./assets/delete-button.png"></p> 
+  </div>
+  

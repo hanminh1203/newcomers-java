@@ -1,8 +1,12 @@
 package vn.elca.training.model.dto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import vn.elca.training.model.ProjectStatus;
+import vn.elca.training.model.entity.Employee;
 import vn.elca.training.model.exception.StatusNotAvailableException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,7 +20,7 @@ public class ProjectDto {
     private String name;
     private String customer;
     private Long groupId;
-    private String membersVisa;
+    private Set<EmployeeDto> members;
     private String status;
 
     private LocalDate startDate;
@@ -63,13 +67,20 @@ public class ProjectDto {
         this.groupId = groupId;
     }
 
-    public String getMembersVisa() {
-        return membersVisa;
+    public Set<EmployeeDto> getMembers() {
+        return members;
     }
 
-    public void setMemberVisaFromInner(Set<String> membersVisa) {
-        this. membersVisa = membersVisa.stream()
-                .collect(Collectors.joining(", "));
+    public void setMembers(Set<EmployeeDto> members) {
+        this.members = members;
+    }
+    @JsonIgnore
+    public List<Long> getMemberIds(){
+        List<Long> memberIds = new ArrayList<>();
+        for (EmployeeDto employeeDto: this.members){
+            memberIds.add(employeeDto.getId());
+        }
+        return memberIds;
     }
 
     public String getStatus() {

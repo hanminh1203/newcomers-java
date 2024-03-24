@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './navigation/navigation.component';
@@ -15,6 +15,7 @@ import { RouterLinkActive, RouterModule } from '@angular/router';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
+import { NgSelectModule } from '@ng-select/ng-select';
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,6 +27,7 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
     AutofocusDirective,
   ],
   imports: [
+    NgSelectModule,
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,

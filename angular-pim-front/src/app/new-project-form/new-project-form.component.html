@@ -48,9 +48,25 @@
                             <label>{{'form.member' | translate}} </label>
                         </div>
                         <div class="col-sm-9" >
-                            <input type="text" class="form-control" formControlName="projectMember">
-                            <div *ngIf="unavailableVisasArr" class="error visaError">{{'form.alertVisaNotExist' | translate}} {{unavailableVisasArr}}</div>
-                        </div>  
+                            <ng-select
+                            class="disable-clear-all" 
+                            [clearable]="false" 
+                            [items]="allEmployee"
+                            [multiple]="true"
+                            [closeOnSelect]="false"
+                            [deselectOnClick]="false"
+                            bindLabel="employeeName"
+                            formControlName="projectMember">
+                            <ng-template ng-label-tmp let-item="item" let-clear="clear" >
+                                <span class="ng-value-label">{{item.visa}}: {{item.employeeName|uppercase}}</span>
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">&times;</span>
+                            </ng-template>
+                            <ng-template ng-option-tmp let-item="item">
+                                {{item.visa}}: {{item.employeeName}}
+                            </ng-template>
+                            </ng-select>
+                        <div *ngIf="unavailableVisasArr" class="error visaError">{{'form.alertVisaNotExist' | translate}} {{unavailableVisasArr}}</div>
+                    </div>
                     </div>
 
                     <div class="row">

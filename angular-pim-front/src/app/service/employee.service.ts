@@ -1,19 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
+import { Employee } from '../employee';
+import { CommonService } from './common.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeService {
 
-  constructor(private http: HttpClient) { }
-  
-  getVisas(): Observable<string[]> {
-    return this.http.get<string[]>('http://localhost:8080/users');
-  }
+  constructor(private http: HttpClient, private commonService: CommonService) { }
+  apiUrl = 'http://localhost:8080/employees'
 
-  checkIfNotExists(arr1: string[], arr2: string[]) {
-    return arr1.filter(item => !arr2.includes(item));
-}
+  getEmployees(): Observable<Employee[]>{
+    return this.http.get<Employee[]>(this.apiUrl)
+      .pipe(
+        catchError(this.commonService.handleError)
+      )
+  }
 }

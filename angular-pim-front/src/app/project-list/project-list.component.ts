@@ -24,7 +24,6 @@ export class ProjectListComponent implements OnInit{
     searchString: new FormControl(''),
     status: new FormControl('')
   })
-  
   ngOnInit(): void {
     this.titleService.setTitle(this.translate.instant('title.projectList'));
     // on init, patch value from shared data service, for history search purpose

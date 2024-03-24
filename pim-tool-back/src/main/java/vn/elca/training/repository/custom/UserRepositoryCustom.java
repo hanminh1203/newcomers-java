@@ -7,5 +7,6 @@ import java.util.Set;
 
 public interface UserRepositoryCustom {
     public List<Employee> findMembersByVisa(Set<String> visas);
+    public List<Employee> findByIds(List<Long> ids);
 
 }

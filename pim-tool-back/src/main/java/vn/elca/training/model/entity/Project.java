@@ -75,12 +75,8 @@ public class Project extends PimBase {
         this.customer = customer;
     }
 
-    public Set<String>  getMemberVisa(){
-        Set<String> membersVisa = new HashSet<>();
-        for (Employee member: this.members ){
-            membersVisa.add(member.getVisa());
-        }
-        return membersVisa;
+    public Set<Employee> getMembers() {
+        return members;
     }
 
     public CompanyGroup getCompanyGroup() {
